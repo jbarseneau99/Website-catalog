@@ -1,0 +1,33 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: catalog-processor
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/spacedataarchive
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+catalog-processor:
+  concurrent-processes: 10
+  max-processing-time-minutes: 60
+  auto-validate-urls: true
+  processing-batch-size: 100 

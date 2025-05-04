@@ -1,0 +1,24 @@
+{
+  "id" : "94c9579e-8234-4168-a9cc-f3149759d941",
+  "name" : "sn 66",
+  "seedUrl" : "https://spacenews.com",
+  "maxDepth" : 3,
+  "maxUrls" : 10000,
+  "createdAt" : "2025-05-03T17:38:48.007994",
+  "lastModified" : "2025-05-03T17:38:50.204713",
+  "mappingStatus" : "RUNNING",
+  "validationStatus" : "NOT_STARTED",
+  "extractionStatus" : "NOT_STARTED",
+  "enhancementStatus" : "NOT_STARTED",
+  "mappingResultId" : null,
+  "validationResultId" : null,
+  "extractionResultId" : null,
+  "enhancementResultId" : null,
+  "statistics" : { },
+  "configuration" : {
+    "extractMetadata" : true,
+    "concurrentValidations" : 10,
+    "enhanceWithAI" : false,
+    "validateDuringMapping" : true
+  }
+}

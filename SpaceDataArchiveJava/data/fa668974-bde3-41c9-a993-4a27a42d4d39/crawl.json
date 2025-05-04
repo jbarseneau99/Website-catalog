@@ -1,0 +1,79 @@
+[ {
+  "url" : "http://spacenew.com",
+  "title" : "Seed Page",
+  "status" : "OK",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com//1",
+  "title" : "Page  1",
+  "status" : "OK",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com//2",
+  "title" : "Page  2",
+  "status" : "OK",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/example/1",
+  "title" : "Page example 1",
+  "status" : "OK",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/example/2",
+  "title" : "Page example 2",
+  "status" : "OK",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/example//1",
+  "title" : "Page example/ 1",
+  "status" : "OK",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/example//2",
+  "title" : "Page example/ 2",
+  "status" : "OK",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/wp-admin/example",
+  "title" : "Excluded Page wp-admin/example",
+  "status" : "Excluded",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/wp-login.php",
+  "title" : "Excluded Page wp-login.php",
+  "status" : "Excluded",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/wp-includes/example",
+  "title" : "Excluded Page wp-includes/example",
+  "status" : "Excluded",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/wp-content/example",
+  "title" : "Excluded Page wp-content/example",
+  "status" : "Excluded",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/feed/",
+  "title" : "Excluded Page feed/",
+  "status" : "Excluded",
+  "validationResult" : null,
+  "metadata" : { }
+}, {
+  "url" : "https://spacenew.com/xmlrpc.php",
+  "title" : "Excluded Page xmlrpc.php",
+  "status" : "Excluded",
+  "validationResult" : null,
+  "metadata" : { }
+} ]

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="800.0" 
+            prefWidth="1200.0" 
+            styleClass="material-background">
+    <!-- The main view will be loaded into the center of this layout -->
+</BorderPane> 

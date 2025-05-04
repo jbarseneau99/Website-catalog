@@ -1,0 +1,10 @@
+{
+  "id" : "e07e9ac7-45bb-4edf-80cb-9e2d0bad36c3",
+  "name" : "SN 1",
+  "seedUrl" : "spacenew.com",
+  "crawlDepth" : 3,
+  "maxPages" : 10000,
+  "createdAt" : "2025-05-03T17:08:34.132166",
+  "lastModified" : "2025-05-03T17:08:34.132166",
+  "status" : "Created"
+}

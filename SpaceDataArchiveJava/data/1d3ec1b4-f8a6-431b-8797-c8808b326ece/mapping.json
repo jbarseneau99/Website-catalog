@@ -1,0 +1,24 @@
+{
+  "id" : "1d3ec1b4-f8a6-431b-8797-c8808b326ece",
+  "name" : "SpaceNew Catalog",
+  "seedUrl" : "http://spacenews.com",
+  "maxDepth" : 3,
+  "maxUrls" : 200000,
+  "createdAt" : "2025-05-03T17:05:53.703795",
+  "lastModified" : "2025-05-03T17:05:53.703795",
+  "mappingStatus" : "NOT_STARTED",
+  "validationStatus" : "NOT_STARTED",
+  "extractionStatus" : "NOT_STARTED",
+  "enhancementStatus" : "NOT_STARTED",
+  "mappingResultId" : null,
+  "validationResultId" : null,
+  "extractionResultId" : null,
+  "enhancementResultId" : null,
+  "statistics" : { },
+  "configuration" : {
+    "concurrentValidations" : 10,
+    "enhanceWithAI" : false,
+    "validateDuringMapping" : true,
+    "extractMetadata" : true
+  }
+}

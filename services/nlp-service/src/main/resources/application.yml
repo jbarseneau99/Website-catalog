@@ -1,0 +1,39 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: nlp-service
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+nlp:
+  models:
+    enabled:
+      - pos
+      - ner
+      - sentiment
+    cache-size-mb: 512
+  processing:
+    async-enabled: true
+    max-concurrent-tasks: 5
+    timeout-seconds: 300 

@@ -1,0 +1,158 @@
+# Build Rules
+build:
+  - command: ./build.sh
+  - watch:
+    # Backend Services
+    - services/**/*.java
+    - common/**/*.java
+    - api-gateway/**/*.java
+    - service-discovery/**/*.java
+    # UI Changes
+    - ui/src/**/*.{ts,tsx,js,jsx,css,scss}
+    - ui/public/**/*
+    # Configuration
+    - config/**/*.template
+    - **/application.{yml,properties}
+    # Docker
+    - **/Dockerfile
+    - docker-compose.yml
+  - pre_build:
+    - command: ./stop-all.sh
+  - post_build:
+    - command: ./run-system.sh
+
+# Development Servers
+dev:
+  # UI Development
+  ui:
+    - command: cd ui && npm run dev
+    - watch:
+      - ui/src/**/*
+      - ui/public/**/*
+    - pre_command: pkill -f "node.*npm" || true
+    - env:
+      - NODE_ENV=development
+      - PORT=3000
+
+  # Backend Services
+  services:
+    - command: ./run-system.sh
+    - watch:
+      - services/**/*.java
+      - common/**/*.java
+      - api-gateway/**/*.java
+      - service-discovery/**/*.java
+    - pre_command: ./stop-all.sh
+
+# Test Configuration
+test:
+  # Unit Tests
+  unit:
+    - command: mvn test
+    - watch:
+      - services/**/test/**/*.java
+      - common/**/test/**/*.java
+      - ui/src/**/*.test.{ts,tsx,js,jsx}
+  
+  # Integration Tests
+  integration:
+    - command: mvn verify -P integration-test
+    - watch:
+      - services/**/it/**/*.java
+      - services/**/integration/**/*.java
+
+# Environment Files
+env:
+  - config/*.template
+  - config/services/*.template
+  - services/*/.env
+  - ui/.env
+
+# Docker Rules
+docker:
+  - command: docker-compose up --build
+  - pre_command: docker-compose down
+  - files:
+    - docker-compose.yml
+    - services/*/Dockerfile
+    - api-gateway/Dockerfile
+    - service-discovery/Dockerfile
+  - env:
+    - DOCKER_BUILDKIT=1
+    - COMPOSE_DOCKER_CLI_BUILD=1
+
+# Process Management
+processes:
+  - patterns:
+    - "java -jar.*eureka-server"
+    - "java -jar.*api-gateway"
+    - "java -jar.*nlp-service"
+    - "java -jar.*catalog-processor"
+    - "java -jar.*url-validation"
+    - "node.*npm"
+  - cleanup:
+    command: |
+      pkill -f "java -jar.*" || true
+      pkill -f "node.*npm" || true
+      docker-compose down || true
+
+# Linting & Formatting
+lint:
+  java:
+    - command: mvn checkstyle:check
+    - watch:
+      - services/**/*.java
+      - common/**/*.java
+      - api-gateway/**/*.java
+      - service-discovery/**/*.java
+  
+  typescript:
+    - command: cd ui && npm run lint
+    - watch:
+      - ui/src/**/*.{ts,tsx}
+
+# Database
+db:
+  - command: docker-compose up mongodb
+  - pre_command: docker-compose stop mongodb
+
+# Ignore Rules
+ignore:
+  # Build outputs
+  - **/target/
+  - ui/build/
+  - ui/dist/
+  - **/node_modules/
+  
+  # IDE and OS files
+  - **/.idea/
+  - **/.vscode/
+  - **/.DS_Store
+  
+  # Logs and temp files
+  - **/logs/
+  - **/temp/
+  - **/*.log
+  
+  # Environment files
+  - **/.env
+  - **/mongodb.env
+  - services/*/.env
+  
+  # Git
+  - **/.git/
+  - **/.gitignore
+
+# Never Ignore
+!ignore:
+  # Templates and configs
+  - config/**/*.template
+  - **/application.yml
+  - **/application.properties
+  - tsconfig.json
+  - pom.xml
+  - package.json
+  
+  # Documentation
+  - **/*.md
+  - docs/**/* 

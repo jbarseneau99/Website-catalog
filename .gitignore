@@ -1,0 +1,26 @@
+# Build outputs
+**/target/
+ui/build/
+ui/dist/
+**/node_modules/
+
+# IDE and OS files
+**/.idea/
+**/.vscode/
+**/.DS_Store
+
+# Logs and temp files
+**/logs/
+**/temp/
+**/*.log
+
+# Environment files
+**/.env
+**/mongodb.env
+services/*/.env
+.env.datacenter
+**/anthropic.properties
+**/env.txt
+
+# Git
+**/.git/ 

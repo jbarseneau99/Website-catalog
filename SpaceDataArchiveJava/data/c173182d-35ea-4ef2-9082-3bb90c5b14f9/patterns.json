@@ -1,0 +1,61 @@
+[ {
+  "pattern" : "/",
+  "include" : true
+}, {
+  "pattern" : "/*/*/",
+  "include" : true
+}, {
+  "pattern" : "/category/*",
+  "include" : true
+}, {
+  "pattern" : "/*/",
+  "include" : true
+}, {
+  "pattern" : "/tag/*",
+  "include" : true
+}, {
+  "pattern" : "/author/*",
+  "include" : true
+}, {
+  "pattern" : "/civil/",
+  "include" : true
+}, {
+  "pattern" : "/commercial/",
+  "include" : true
+}, {
+  "pattern" : "/military/",
+  "include" : true
+}, {
+  "pattern" : "/launch/",
+  "include" : true
+}, {
+  "pattern" : "/satellites/",
+  "include" : true
+}, {
+  "pattern" : "/science-and-tech/",
+  "include" : true
+}, {
+  "pattern" : "/people/",
+  "include" : true
+}, {
+  "pattern" : "/wp-admin/*",
+  "include" : false
+}, {
+  "pattern" : "/wp-login.php",
+  "include" : false
+}, {
+  "pattern" : "/wp-includes/*",
+  "include" : false
+}, {
+  "pattern" : "/feed/",
+  "include" : false
+}, {
+  "pattern" : "*/feed/",
+  "include" : false
+}, {
+  "pattern" : "/xmlrpc.php",
+  "include" : false
+}, {
+  "pattern" : "*/page/*",
+  "include" : false
+} ]

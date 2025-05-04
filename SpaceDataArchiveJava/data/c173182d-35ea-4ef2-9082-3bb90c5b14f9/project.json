@@ -1,0 +1,10 @@
+{
+  "id" : "c173182d-35ea-4ef2-9082-3bb90c5b14f9",
+  "name" : "diagnostic-test-1746189558356",
+  "seedUrl" : "https://spacenews.com",
+  "crawlDepth" : 3,
+  "maxPages" : 100000,
+  "createdAt" : "2025-05-02T08:39:18.357236",
+  "lastModified" : "2025-05-02T08:39:23.106452",
+  "status" : "Completed"
+}

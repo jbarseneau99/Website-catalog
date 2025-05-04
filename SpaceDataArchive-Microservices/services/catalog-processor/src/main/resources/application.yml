@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: Mach33_Catalog_Processor 

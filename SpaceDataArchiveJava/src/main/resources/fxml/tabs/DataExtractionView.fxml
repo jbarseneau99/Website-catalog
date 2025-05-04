@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.spacedataarchive.controller.DataExtractionController"
+            prefHeight="700.0" prefWidth="1200.0">
+    
+    <top>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Data Extraction" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                
+                <Region HBox.hgrow="ALWAYS" />
+                
+                <Label text="🤖 AI Enhanced" style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 5 10; -fx-background-radius: 15;"/>
+            </HBox>
+            
+            <Label text="Configure data extraction from crawled pages" style="-fx-font-style: italic;" />
+            
+            <Separator />
+        </VBox>
+    </top>
+    
+    <center>
+        <HBox>
+            <!-- LEFT PANEL: Control Panel -->
+            <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f5f5f5; -fx-border-color: #dddddd; -fx-border-width: 0 1 0 0;" minWidth="280" maxWidth="280">
+                <Label text="Extraction Controls" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                
+                <TitledPane text="Configuration" expanded="true">
+                    <VBox spacing="8">
+                        <Label text="Extraction Method:" />
+                        <ComboBox fx:id="extractionMethodComboBox" prefWidth="260" maxWidth="Infinity" />
+                        
+                        <Label text="Source Selection:" />
+                        <ComboBox fx:id="sourceComboBox" prefWidth="260" maxWidth="Infinity" promptText="Select source" />
+                    </VBox>
+                </TitledPane>
+                
+                <Label text="URLs to Process:" />
+                <ListView fx:id="urlsListView" prefHeight="200" VBox.vgrow="ALWAYS" />
+                
+                <HBox spacing="5">
+                    <Button text="Add URL" style="-fx-background-color: #27ae60; -fx-text-fill: white;" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+                    <Button text="Remove" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+                </HBox>
+                
+                <Button fx:id="extractDataButton" text="Extract Data" 
+                       style="-fx-background-color: #2980b9; -fx-text-fill: white;" maxWidth="Infinity" />
+                
+                <Region VBox.vgrow="ALWAYS" />
+                
+                <Label fx:id="statusLabel" text="Ready" style="-fx-font-style: italic;" />
+            </VBox>
+            
+            <!-- CENTER: Main Content Area -->
+            <VBox HBox.hgrow="ALWAYS" spacing="10" style="-fx-padding: 10;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Extracted Data" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    
+                    <TextField fx:id="filterField" promptText="Filter results" prefWidth="150" />
+                    <Button text="Apply" style="-fx-background-color: #3498db; -fx-text-fill: white;" />
+                </HBox>
+                
+                <TableView fx:id="extractedDataTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="urlColumn" text="URL" prefWidth="200" />
+                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="150" />
+                        <TableColumn fx:id="typeColumn" text="Type" prefWidth="100" />
+                        <TableColumn fx:id="sizeColumn" text="Size" prefWidth="80" />
+                        <TableColumn fx:id="extractedAtColumn" text="Extracted At" prefWidth="150" />
+                    </columns>
+                </TableView>
+                
+                <!-- Pagination -->
+                <Pagination fx:id="resultsPagination" maxPageIndicatorCount="10" />
+                
+                <!-- Data Preview -->
+                <TitledPane text="Data Preview" expanded="true">
+                    <VBox spacing="8">
+                        <TextArea fx:id="previewTextArea" prefHeight="150" wrapText="true" editable="false" />
+                        
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Button text="Export Selected" style="-fx-background-color: #3498db; -fx-text-fill: white;" />
+                            <Button text="Export All" />
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+            </VBox>
+            
+            <!-- RIGHT PANEL: AI Assistant Drawer -->
+            <StackPane fx:id="rightDrawerContainer">
+                <VBox fx:id="aiAssistantDrawer" style="-fx-padding: 10; -fx-background-color: #f0e6f7; -fx-border-color: #dddddd; -fx-border-width: 0 0 0 1;" 
+                      minWidth="300" maxWidth="300">
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="🤖 Data Extraction Assistant" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="toggleAIDrawerButton" text="Hide" style="-fx-background-color: transparent;" 
+                                onAction="#toggleAIDrawer" />
+                    </HBox>
+                    
+                    <Separator />
+                    
+                    <!-- Chat Area -->
+                    <ScrollPane fx:id="chatScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" 
+                                style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;">
+                        <VBox fx:id="chatContainer" spacing="10" style="-fx-padding: 10;" />
+                    </ScrollPane>
+                    
+                    <!-- Message Input Area -->
+                    <HBox spacing="5" alignment="CENTER" style="-fx-padding: 5 0 0 0;">
+                        <TextArea fx:id="messageInput" prefHeight="40" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="sendButton" text="Send" prefWidth="60" 
+                                style="-fx-background-color: #8e44ad; -fx-text-fill: white;" />
+                    </HBox>
+                    
+                    <Separator />
+                    
+                    <TitledPane text="AI Capabilities" expanded="false">
+                        <VBox spacing="5">
+                            <Label wrapText="true" text="• Extracts structured data from web pages" />
+                            <Label wrapText="true" text="• Identifies and categorizes key information" />
+                            <Label wrapText="true" text="• Creates metadata for archival" />
+                            <Label wrapText="true" text="• Processes text, images, and tables" />
+                            <Label wrapText="true" text="• Normalizes data for consistent formatting" />
+                        </VBox>
+                    </TitledPane>
+                </VBox>
+                
+                <!-- Collapsed state - just the toggle button -->
+                <VBox fx:id="aiAssistantToggle" visible="false" minWidth="30" maxWidth="30" 
+                      style="-fx-background-color: #f0e6f7; -fx-border-color: #dddddd; -fx-border-width: 0 0 0 1;">
+                    <Button fx:id="expandAIDrawerButton" text="👁️" 
+                            style="-fx-background-color: transparent;" 
+                            onAction="#toggleAIDrawer" />
+                </VBox>
+            </StackPane>
+        </HBox>
+    </center>
+</BorderPane> 

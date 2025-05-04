@@ -1,0 +1,10 @@
+{
+  "id" : "dfb0dd95-215f-49d8-a20f-900b7cafd388",
+  "name" : "Site Map 2025-05-02",
+  "seedUrl" : "https://spacenews.com",
+  "crawlDepth" : 3,
+  "maxPages" : 100,
+  "createdAt" : "2025-05-02T06:22:02.211855",
+  "lastModified" : "2025-05-03T17:51:55.381495",
+  "status" : "Failed: Cannot invoke \"com.google.common.hash.BloomFilter.put(Object)\" because \"this.urlBloomFilter\" is null"
+}

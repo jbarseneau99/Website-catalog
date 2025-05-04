@@ -1,0 +1,24 @@
+{
+  "id" : "ffd11444-d7d8-4c78-aa47-ad3713f5e9df",
+  "name" : "Spacenews",
+  "seedUrl" : "http://spacenew.com",
+  "maxDepth" : 3,
+  "maxUrls" : 10000,
+  "createdAt" : "2025-05-03T17:07:30.081736",
+  "lastModified" : "2025-05-03T17:42:02.339446",
+  "mappingStatus" : "RUNNING",
+  "validationStatus" : "NOT_STARTED",
+  "extractionStatus" : "NOT_STARTED",
+  "enhancementStatus" : "NOT_STARTED",
+  "mappingResultId" : null,
+  "validationResultId" : null,
+  "extractionResultId" : null,
+  "enhancementResultId" : null,
+  "statistics" : { },
+  "configuration" : {
+    "extractMetadata" : true,
+    "concurrentValidations" : 10,
+    "enhanceWithAI" : false,
+    "validateDuringMapping" : true
+  }
+}

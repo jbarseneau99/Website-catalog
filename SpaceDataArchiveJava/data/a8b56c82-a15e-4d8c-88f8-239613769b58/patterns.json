@@ -1,0 +1,28 @@
+[ {
+  "pattern" : "/",
+  "include" : true
+}, {
+  "pattern" : "/*",
+  "include" : true
+}, {
+  "pattern" : "/*/",
+  "include" : true
+}, {
+  "pattern" : "/wp-admin/*",
+  "include" : false
+}, {
+  "pattern" : "/wp-login.php",
+  "include" : false
+}, {
+  "pattern" : "/wp-includes/*",
+  "include" : false
+}, {
+  "pattern" : "/wp-content/*",
+  "include" : false
+}, {
+  "pattern" : "/feed/",
+  "include" : false
+}, {
+  "pattern" : "/xmlrpc.php",
+  "include" : false
+} ]

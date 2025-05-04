@@ -1,0 +1,1034 @@
+{
+  "id" : "e4c02358-2441-430a-ba9e-60062a1ea968",
+  "jobId" : "3a0b8b76-289b-47f8-bf9e-3e03cb7fb10f",
+  "phase" : "mapping",
+  "createdAt" : "2025-05-03T17:52:27.887758",
+  "completedAt" : "2025-05-03T17:55:11.713442",
+  "completed" : true,
+  "successful" : true,
+  "errorMessage" : null,
+  "processedUrls" : [ {
+    "url" : "https://spacenews.com",
+    "status" : "success",
+    "message" : "Valid URL",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com",
+    "status" : "success",
+    "message" : "Valid URL",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/10/launch-schedules-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/06/iss-investigates-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/07/commercial-completes-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/04/rocket-investigates-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/11/commercial-completes-commercial-5/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/07/orbit-investigates-orbit/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/08/nasa-schedules-nasa/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/05/nasa-signs-nasa/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/05/science-delays-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/12/launch-partners-launch-10/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/09/rocket-deploys-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/01/commercial-schedules-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/11/satellite-awards-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/12/commercial-targets-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/02/iss-new-iss-15/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/08/space-develops-space/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/01/spacex-deploys-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/04/mars-new-mars/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/03/commercial-successful-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/09/mission-develops-mission-20/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/03/moon-announces-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/11/launch-awards-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/09/satellite-deploys-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/03/commercial-signs-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/03/orbit-begins-orbit-25/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/06/moon-selects-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/07/rocket-begins-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/07/iss-develops-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/11/launch-prepares-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/04/science-signs-science-30/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/07/mission-schedules-mission/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/06/station-prepares-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/09/moon-signs-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/02/iss-begins-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/09/launch-successful-launch-35/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/04/moon-plans-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/02/mission-develops-mission/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/07/satellite-signs-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/02/mission-new-mission/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/01/science-schedules-science-40/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/11/moon-signs-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/06/rocket-investigates-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/08/space-confirms-space/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/07/science-completes-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/04/space-targets-space-45/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/03/mars-prepares-mars/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/12/science-deploys-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/05/satellite-investigates-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/06/rocket-confirms-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/03/mission-confirms-mission-50/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/11/orbit-announces-orbit/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/12/science-begins-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/03/mission-plans-mission/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/02/moon-completes-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/06/station-signs-station-55/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/06/rocket-announces-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/02/launch-awards-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/08/rocket-announces-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/09/spacex-targets-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/08/launch-signs-launch-60/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/08/science-deploys-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/10/science-develops-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/03/commercial-announces-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/05/iss-schedules-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/06/mars-announces-mars-65/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/05/commercial-begins-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/07/satellite-successful-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/06/iss-successful-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/05/iss-investigates-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/10/space-new-space-70/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/11/iss-confirms-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/12/space-develops-space/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/04/station-signs-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/08/orbit-tests-orbit/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/11/nasa-successful-nasa-75/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/12/nasa-begins-nasa/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/01/spacex-partners-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/02/station-delays-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/08/commercial-successful-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/10/mission-signs-mission-80/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/06/launch-schedules-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/10/satellite-develops-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/08/station-begins-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/08/moon-plans-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/06/moon-new-moon-85/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/08/orbit-partners-orbit/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/01/spacex-confirms-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/11/mars-partners-mars/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/02/iss-confirms-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/03/spacex-successful-spacex-90/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/10/mars-develops-mars/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/05/rocket-partners-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/04/satellite-prepares-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/11/science-partners-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/02/spacex-successful-spacex-95/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/12/space-plans-space/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/02/spacex-plans-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/07/station-successful-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/11/satellite-targets-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/04/commercial-plans-commercial-0/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com",
+    "status" : "success",
+    "message" : "Valid URL",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/10/launch-schedules-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/06/iss-investigates-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/07/commercial-completes-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/04/rocket-investigates-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/11/commercial-completes-commercial-5/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/07/orbit-investigates-orbit/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/08/nasa-schedules-nasa/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/05/nasa-signs-nasa/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/05/science-delays-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/12/launch-partners-launch-10/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/09/rocket-deploys-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/01/commercial-schedules-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/11/satellite-awards-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/12/commercial-targets-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/02/iss-new-iss-15/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/08/space-develops-space/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/01/spacex-deploys-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/04/mars-new-mars/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/03/commercial-successful-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/09/mission-develops-mission-20/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/03/moon-announces-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/11/launch-awards-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/09/satellite-deploys-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/03/commercial-signs-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/03/orbit-begins-orbit-25/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/06/moon-selects-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/07/rocket-begins-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/07/iss-develops-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/11/launch-prepares-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/04/science-signs-science-30/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/07/mission-schedules-mission/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/06/station-prepares-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/09/moon-signs-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/02/iss-begins-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/09/launch-successful-launch-35/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/04/moon-plans-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/02/mission-develops-mission/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/07/satellite-signs-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/02/mission-new-mission/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/01/science-schedules-science-40/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/11/moon-signs-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/06/rocket-investigates-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/08/space-confirms-space/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/07/science-completes-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/04/space-targets-space-45/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/03/mars-prepares-mars/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/12/science-deploys-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/05/satellite-investigates-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/06/rocket-confirms-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/03/mission-confirms-mission-50/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/11/orbit-announces-orbit/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/12/science-begins-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/03/mission-plans-mission/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/02/moon-completes-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/06/station-signs-station-55/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/06/rocket-announces-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/02/launch-awards-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/08/rocket-announces-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/09/spacex-targets-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/08/launch-signs-launch-60/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/08/science-deploys-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/10/science-develops-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/03/commercial-announces-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/05/iss-schedules-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2018/06/mars-announces-mars-65/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/05/commercial-begins-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/07/satellite-successful-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/06/iss-successful-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/05/iss-investigates-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/10/space-new-space-70/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/11/iss-confirms-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/12/space-develops-space/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/04/station-signs-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/08/orbit-tests-orbit/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/11/nasa-successful-nasa-75/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/12/nasa-begins-nasa/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/01/spacex-partners-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/02/station-delays-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/08/commercial-successful-commercial/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/10/mission-signs-mission-80/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/06/launch-schedules-launch/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/10/satellite-develops-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2022/08/station-begins-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/08/moon-plans-moon/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/06/moon-new-moon-85/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/08/orbit-partners-orbit/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2023/01/spacex-confirms-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/11/mars-partners-mars/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/02/iss-confirms-iss/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2019/03/spacex-successful-spacex-90/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/10/mars-develops-mars/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/05/rocket-partners-rocket/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/04/satellite-prepares-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/11/science-partners-science/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/02/spacex-successful-spacex-95/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/12/space-plans-space/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2025/02/spacex-plans-spacex/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2021/07/station-successful-station/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2024/11/satellite-targets-satellite/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  }, {
+    "url" : "https://spacenews.com/2020/04/commercial-plans-commercial-0/",
+    "status" : "error",
+    "message" : "Invalid response code: 404",
+    "metadata" : { }
+  } ],
+  "metrics" : {
+    "successCount" : 0,
+    "errorCount" : 0
+  },
+  "successCount" : 3,
+  "errorCount" : 200,
+  "totalProcessedCount" : 203,
+  "warningCount" : 0
+}

@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: Mach33_NLP_Service 

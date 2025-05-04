@@ -1,0 +1,16 @@
+{
+  "id" : "31fd4b73-3bda-422f-860c-4e2ccc1ca864",
+  "jobId" : "9973689c-11df-4d73-b398-6a0dc1399b1f",
+  "phase" : "mapping",
+  "createdAt" : "2025-05-03T17:08:34.130513",
+  "completedAt" : "2025-05-03T17:08:34.135776",
+  "completed" : true,
+  "successful" : false,
+  "errorMessage" : "Mapping process failed: java.lang.IllegalArgumentException: Project not found",
+  "processedUrls" : [ ],
+  "metrics" : { },
+  "successCount" : 0,
+  "errorCount" : 0,
+  "totalProcessedCount" : 0,
+  "warningCount" : 0
+}

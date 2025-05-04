@@ -1,0 +1,10 @@
+{
+  "id" : "4d468de3-4e65-4e69-838a-936bea75088e",
+  "name" : "sn66",
+  "seedUrl" : "https://spacenews.com",
+  "crawlDepth" : 4,
+  "maxPages" : 10000,
+  "createdAt" : "2025-05-03T17:48:08.059915",
+  "lastModified" : "2025-05-03T17:48:08.061676",
+  "status" : "Crawling"
+}

@@ -1,0 +1,32 @@
+{
+  "url-validation" : {
+    "id" : "url-validation",
+    "name" : "URL Validation",
+    "description" : "Validates URLs for security, content relevance, and technical compliance",
+    "type" : "FUNCTION"
+  },
+  "ai_assistant_popup" : {
+    "id" : "ai_assistant_popup",
+    "name" : "Function: ai_assistant_popup",
+    "description" : "AI conversation function",
+    "type" : "FUNCTION"
+  },
+  "discovery_assistant" : {
+    "id" : "discovery_assistant",
+    "name" : "Discovery Assistant",
+    "description" : "Assists with website discovery and sitemap creation",
+    "type" : "FUNCTION"
+  },
+  "ai_assistant_tab" : {
+    "id" : "ai_assistant_tab",
+    "name" : "Function: ai_assistant_tab",
+    "description" : "AI conversation function",
+    "type" : "FUNCTION"
+  },
+  "proxy_balancer" : {
+    "id" : "proxy_balancer",
+    "name" : "Proxy Balancer",
+    "description" : "Assists with proxy management and rate limiting optimization",
+    "type" : "FUNCTION"
+  }
+}

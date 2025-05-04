@@ -1,0 +1,26 @@
+{
+  "id" : "b60730ae-6ce6-4273-87be-ac4320d3fd47",
+  "jobId" : "03650709-bb24-455e-8c40-feddb1694673",
+  "phase" : "mapping",
+  "createdAt" : "2025-05-03T17:16:34.461006",
+  "completedAt" : "2025-05-03T17:16:34.492019",
+  "completed" : true,
+  "successful" : true,
+  "errorMessage" : null,
+  "processedUrls" : [ {
+    "url" : "spacenews.com",
+    "status" : "error",
+    "message" : "Invalid URL syntax",
+    "metadata" : { }
+  }, {
+    "url" : "spacenews.com",
+    "status" : "error",
+    "message" : "Invalid URL syntax",
+    "metadata" : { }
+  } ],
+  "metrics" : { },
+  "successCount" : 0,
+  "errorCount" : 2,
+  "totalProcessedCount" : 2,
+  "warningCount" : 0
+}

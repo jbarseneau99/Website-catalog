@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: Mach33_API_Gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: url-validation-service
+          uri: lb://url-validation-service
+          predicates:
+            - Path=/api/validation/**
+          filters:
+            - StripPrefix=1
+        - id: catalog-processor-service
+          uri: lb://catalog-processor-service
+          predicates:
+            - Path=/api/catalog/**
+          filters:
+            - StripPrefix=1
+        - id: nlp-service
+          uri: lb://nlp-service
+          predicates:
+            - Path=/api/nlp/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always 

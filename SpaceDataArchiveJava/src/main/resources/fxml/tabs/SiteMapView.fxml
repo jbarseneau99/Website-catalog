@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Rectangle?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.spacedataarchive.controller.SiteMapController"
+            prefHeight="700.0" prefWidth="1200.0">
+    
+    <top>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Site Map Creation" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <Label text="🤖 AI Enhanced" style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-padding: 5 10; -fx-background-radius: 15;"/>
+            </HBox>
+            <Label text="Create a site map with AI-assisted crawling patterns" style="-fx-font-style: italic;" />
+            <Separator />
+        </VBox>
+    </top>
+    
+    <center>
+        <HBox>
+            <!-- LEFT PANEL: Control Panel -->
+            <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: #f5f5f5; -fx-border-color: #dddddd; -fx-border-width: 0 1 0 0;" minWidth="280" maxWidth="280">
+                <Label text="Project Controls" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                
+                <TitledPane text="New Project" expanded="false">
+                    <VBox spacing="10">
+                        <GridPane hgap="10" vgap="10">
+                            <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+                            
+                            <Label text="Project Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <TextField fx:id="projectNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            
+                            <Label text="Seed URL:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="seedUrlField" promptText="https://example.com" 
+                                    GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            
+                            <Label text="Crawl Depth:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Spinner fx:id="crawlDepthSpinner" min="1" max="10" initialValue="3" 
+                                    GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            
+                            <Label text="Max Pages:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <Spinner fx:id="maxPagesSpinner" min="10" max="1000" initialValue="100" 
+                                    GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        </GridPane>
+                        
+                        <Button fx:id="newProjectButton" text="Create Project" style="-fx-background-color: #27ae60; -fx-text-fill: white;" 
+                                maxWidth="Infinity" />
+                    </VBox>
+                </TitledPane>
+                
+                <Label text="Existing Projects" style="-fx-font-weight: bold;" />
+                <ComboBox fx:id="projectComboBox" prefWidth="260" maxWidth="Infinity" />
+                
+                <VBox spacing="8">
+                    <Button fx:id="startCrawlButton" text="Start AI-Assisted Crawl" 
+                            style="-fx-background-color: #2980b9; -fx-text-fill: white;" 
+                            maxWidth="Infinity" />
+                    <Button fx:id="stopCrawlButton" text="Stop Crawl" 
+                            style="-fx-background-color: #e74c3c; -fx-text-fill: white;" 
+                            disable="true" maxWidth="Infinity" />
+                    <Button fx:id="exportResultsButton" text="Export Results" 
+                            disable="true" maxWidth="Infinity" />
+                </VBox>
+                
+                <Separator />
+                
+                <TitledPane text="Crawler Settings" expanded="false">
+                    <VBox spacing="8">
+                        <Button fx:id="settingsButton" text="Advanced Settings" 
+                                style="-fx-background-color: #34495e; -fx-text-fill: white;" 
+                                maxWidth="Infinity" />
+                        
+                        <TitledPane text="Performance Visualization" expanded="false">
+                            <VBox spacing="5" alignment="CENTER">
+                                <Pane fx:id="visualizationPane" prefWidth="250" prefHeight="160" 
+                                      style="-fx-background-color: white; -fx-border-color: #dddddd;" />
+                                <Label fx:id="performanceLabel" text="Waiting for crawl to start..." 
+                                       style="-fx-font-size: 10;" wrapText="true" textAlignment="CENTER" />
+                            </VBox>
+                        </TitledPane>
+                    </VBox>
+                </TitledPane>
+                
+                <Region VBox.vgrow="ALWAYS" />
+                
+                <ProgressBar fx:id="progressBar" progress="-1" maxWidth="Infinity" visible="false" />
+                <Label fx:id="statusLabel" text="Ready" style="-fx-font-style: italic;" />
+            </VBox>
+            
+            <!-- CENTER: Main Content Area -->
+            <VBox HBox.hgrow="ALWAYS" spacing="10" style="-fx-padding: 10;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Crawl Results" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    
+                    <!-- Quick filter controls -->
+                    <Label text="Quick Filter:" />
+                    <TextField fx:id="quickUrlFilterField" promptText="Filter by URL" prefWidth="150" />
+                    <ComboBox fx:id="quickStatusFilterCombo" prefWidth="100" />
+                    <Button text="Apply" onAction="#applyFilters" style="-fx-background-color: #3498db; -fx-text-fill: white;" />
+                    <Button text="Reset" onAction="#resetFilters" />
+                </HBox>
+                
+                <!-- Advanced filters in collapsible section -->
+                <TitledPane text="Advanced Filters" expanded="false">
+                    <VBox spacing="10">
+                        <GridPane hgap="10" vgap="10">
+                            <Label text="URL:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <TextField fx:id="urlFilterField" promptText="Filter by URL" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" />
+                            
+                            <Label text="Title:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="titleFilterField" promptText="Filter by title" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" />
+                            
+                            <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <ComboBox fx:id="statusFilterCombo" prefWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        </GridPane>
+                        
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Button text="Apply Filters" onAction="#applyAdvancedFilters" style="-fx-background-color: #3498db; -fx-text-fill: white;" />
+                            <Button text="Reset Filters" onAction="#resetFilters" />
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+                
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="totalResultsLabel" text="0 results" />
+                </HBox>
+                
+                <TableView fx:id="crawlResultsTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="urlColumn" text="URL" prefWidth="400" />
+                        <TableColumn fx:id="titleColumn" text="Title" prefWidth="200" />
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
+                    </columns>
+                </TableView>
+                
+                <!-- Pagination -->
+                <Pagination fx:id="resultsPagination" maxPageIndicatorCount="10" />
+            </VBox>
+            
+            <!-- RIGHT PANEL: AI Assistant Drawer -->
+            <StackPane fx:id="rightDrawerContainer">
+                <VBox fx:id="aiAssistantDrawer" style="-fx-padding: 10; -fx-background-color: #f0e6f7; -fx-border-color: #dddddd; -fx-border-width: 0 0 0 1;" 
+                      minWidth="300" maxWidth="300">
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="🤖 AI Assistant" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="toggleAIDrawerButton" text="Hide" style="-fx-background-color: transparent;" 
+                                onAction="#toggleAIDrawer" />
+                    </HBox>
+                    
+                    <Separator />
+                    
+                    <Label text="AI Analysis" style="-fx-font-weight: bold;" />
+                    <TextArea fx:id="aiAnalysisTextArea" VBox.vgrow="ALWAYS" 
+                             wrapText="true" style="-fx-background-color: white;" />
+                     
+                    <Separator />
+                    
+                    <TitledPane text="AI Capabilities" expanded="false">
+                        <VBox spacing="5">
+                            <Label wrapText="true" text="• Intelligently analyzes website structure" />
+                            <Label wrapText="true" text="• Identifies optimal crawl patterns" />
+                            <Label wrapText="true" text="• Prioritizes content by relevance" />
+                            <Label wrapText="true" text="• Avoids crawler traps and duplicates" />
+                            <Label wrapText="true" text="• Provides performance optimization" />
+                        </VBox>
+                    </TitledPane>
+                </VBox>
+                
+                <!-- Collapsed state - just the toggle button -->
+                <VBox fx:id="aiAssistantToggle" visible="false" minWidth="30" maxWidth="30" 
+                      style="-fx-background-color: #f0e6f7; -fx-border-color: #dddddd; -fx-border-width: 0 0 0 1;">
+                    <Button fx:id="expandAIDrawerButton" text="👁️" 
+                            style="-fx-background-color: transparent;" 
+                            onAction="#toggleAIDrawer" />
+                </VBox>
+            </StackPane>
+        </HBox>
+    </center>
+</BorderPane> 
