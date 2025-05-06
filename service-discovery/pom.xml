@@ -11,17 +11,27 @@
     </parent>
 
     <artifactId>service-discovery</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <name>Service Discovery (Eureka Server)</name>
-    <description>Eureka Server for Space Data Archive System</description>
+    <description>Eureka Server for Service Discovery</description>
 
     <dependencies>
+        <!-- Eureka Server -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
+
+        <!-- Spring Boot Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
     </dependencies>
 
@@ -30,6 +40,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

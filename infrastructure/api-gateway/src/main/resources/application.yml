@@ -1,0 +1,85 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - Origin
+              - Content-Type
+              - Accept
+              - Authorization
+              - X-Requested-With
+            exposedHeaders:
+              - Access-Control-Allow-Origin
+              - Access-Control-Allow-Credentials
+            allowCredentials: true
+            maxAge: 3600
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      routes:
+        - id: url-validation
+          uri: lb://URL-VALIDATION
+          predicates:
+            - Path=/api/url/**
+          filters:
+            - StripPrefix=2
+        - id: nlp-service
+          uri: lb://NLP-SERVICE
+          predicates:
+            - Path=/api/nlp/**
+          filters:
+            - StripPrefix=2
+        - id: catalog-processor
+          uri: lb://CATALOG-PROCESSOR
+          predicates:
+            - Path=/api/catalog/**
+          filters:
+            - StripPrefix=2
+        - id: port-manager
+          uri: lb://PORT-MANAGER
+          predicates:
+            - Path=/api/ports/**,/api/ports/actuator/**
+          filters:
+            - StripPrefix=2
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761}/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+    registry-fetch-interval-seconds: 30
+  instance:
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 30
+    leaseExpirationDurationInSeconds: 90
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    statusPageUrlPath: /actuator/info
+    healthCheckUrlPath: /actuator/health
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always 

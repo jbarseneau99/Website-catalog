@@ -1,30 +1,54 @@
 server:
-  port: 8081
+  port: 8082  # Fixed port
 
 spring:
   application:
-    name: nlp-service
+    name: NLP-SERVICE
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI}
+      uri: mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
+
+port-manager:
+  url: ${PORT_MANAGER_URL:http://localhost:8090}
+  service-name: ${spring.application.name}
+  enabled: false  # Disable port manager since we're using a fixed port
+  range:
+    min: 8082
+    max: 8089
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://eureka-server:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761}/eureka/
     registerWithEureka: true
     fetchRegistry: true
   instance:
     preferIpAddress: true
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+    statusPageUrlPath: /actuator/info
+    healthCheckUrlPath: /actuator/health
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "*"
+      base-path: /actuator
   endpoint:
     health:
       show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  health:
+    mongodb:
+      enabled: true
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
 
 nlp:
   models:

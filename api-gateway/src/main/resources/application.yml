@@ -1,34 +1,36 @@
 server:
-  port: 8084
+  port: 8080
 
 spring:
   application:
-    name: API-GATEWAY
+    name: api-gateway
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
           lowerCaseServiceId: true
-      routes:
-        - id: url-validation-service
-          uri: lb://url-validation-service
-          predicates:
-            - Path=/api/validation/**
-          filters:
-            - StripPrefix=1
-        - id: catalog-processor-service
-          uri: lb://catalog-processor-service
-          predicates:
-            - Path=/api/catalog/**
-          filters:
-            - StripPrefix=1
-        - id: nlp-service
-          uri: lb://nlp-service
-          predicates:
-            - Path=/api/nlp/**
-          filters:
-            - StripPrefix=1
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - Origin
+              - Content-Type
+              - Accept
+              - Authorization
+              - X-Requested-With
+            exposedHeaders:
+              - Access-Control-Allow-Origin
+              - Access-Control-Allow-Credentials
+            allowCredentials: true
+            maxAge: 3600
 
 eureka:
   client:
@@ -36,19 +38,19 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     registerWithEureka: true
     fetchRegistry: true
-    enabled: true
-    healthcheck:
-      enabled: true
   instance:
     preferIpAddress: true
-    leaseRenewalIntervalInSeconds: 10
-    leaseExpirationDurationInSeconds: 30
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+      cors:
+        allowed-origins: "http://localhost:3000"
+        allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+        allowed-headers: "*"
+        allow-credentials: true
   endpoint:
     health:
       show-details: always 

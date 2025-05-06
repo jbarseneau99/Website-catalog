@@ -10,14 +10,19 @@ eureka:
     registerWithEureka: false
     fetchRegistry: false
   server:
-    enableSelfPreservation: false
     waitTimeInMsWhenSyncEmpty: 0
+    enableSelfPreservation: false
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+      cors:
+        allowed-origins: "http://localhost:3000"
+        allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+        allowed-headers: "*"
+        allow-credentials: true
   endpoint:
     health:
       show-details: always 

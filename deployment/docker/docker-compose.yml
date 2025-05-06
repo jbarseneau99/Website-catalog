@@ -1,0 +1,233 @@
+version: '3.8'
+
+services:
+  # UI Dashboard
+  microservices-dashboard-ui:
+    build: 
+      context: ../../ui
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - eureka-server
+      - api-gateway
+    networks:
+      - microservices-network
+
+  # Service Discovery
+  eureka-server:
+    build: ../../infrastructure/service-discovery
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - JAVA_OPTS=-Djava.net.preferIPv4Stack=true
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # API Gateway
+  api-gateway:
+    build: ../../infrastructure/api-gateway
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - JAVA_OPTS=-Djava.net.preferIPv4Stack=true
+    depends_on:
+      - eureka-server
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # URL Validation Service
+  url-validation:
+    build: ../../services/url-validation
+    ports:
+      - "${PORT:-8081}:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
+      - JAVA_OPTS=-Djava.net.preferIPv4Stack=true
+    depends_on:
+      - eureka-server
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # NLP Service
+  nlp-service:
+    build: ../../services/nlp-service
+    ports:
+      - "${PORT:-8082}:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
+      - JAVA_OPTS=-Djava.net.preferIPv4Stack=true
+    depends_on:
+      - eureka-server
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Catalog Processor
+  catalog-processor:
+    build: ../../services/catalog-processor
+    ports:
+      - "${PORT:-8083}:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
+      - JAVA_OPTS=-Djava.net.preferIPv4Stack=true
+    depends_on:
+      - eureka-server
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Port Manager
+  port-manager:
+    build: ../../services/port-manager
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
+      - JAVA_OPTS=-Djava.net.preferIPv4Stack=true
+    depends_on:
+      - eureka-server
+    networks:
+      - microservices-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    volumes:
+      - ../../infrastructure/observability/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - microservices-network
+
+  # Logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.0
+    volumes:
+      - ../../infrastructure/observability/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - "5000:5000"
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    depends_on:
+      - elasticsearch
+    networks:
+      - microservices-network
+
+  # Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    volumes:
+      - ../../infrastructure/observability/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - microservices-network
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    volumes:
+      - ../../infrastructure/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - microservices-network
+
+  # Grafana
+  grafana:
+    image: grafana/grafana:9.5.2
+    volumes:
+      - ../../infrastructure/observability/grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - microservices-network
+
+  # Jaeger
+  jaeger:
+    image: jaegertracing/all-in-one:1.45
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5775:5775/udp"
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+      - "14250:14250"
+      - "14268:14268"
+      - "14269:14269"
+      - "9411:9411"
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  elasticsearch_data:
+  prometheus_data:
+  grafana_data: 

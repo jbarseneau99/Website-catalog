@@ -1,0 +1,45 @@
+server:
+  port: ${PORT:0}  # Dynamic port assignment
+
+spring:
+  profiles: local
+  data:
+    mongodb:
+      uri: mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
+      database: website-catalog
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: true
+    instanceId: ${spring.application.name}:${random.value}
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.spacedataarchive: DEBUG
+    org.springframework: INFO
+    org.springframework.data.mongodb: DEBUG  # Added for MongoDB debugging
+
+# Port Manager Configuration
+port-manager:
+  enabled: true
+  range:
+    min: 8081
+    max: 8999
+  excluded-ports:
+    - 8761  # Eureka Server 

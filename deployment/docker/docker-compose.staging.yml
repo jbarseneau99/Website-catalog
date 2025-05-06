@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    build: 
+      context: ./service-discovery
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+
+  port-manager:
+    build:
+      context: ./services/port-manager
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+    depends_on:
+      - eureka-server
+
+  url-validation:
+    build:
+      context: ./services/url-validation
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+    depends_on:
+      - eureka-server
+      - port-manager
+
+  nlp-service:
+    build:
+      context: ./services/nlp-service
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+    depends_on:
+      - eureka-server
+      - port-manager
+
+  catalog-processor:
+    build:
+      context: ./services/catalog-processor
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+    depends_on:
+      - eureka-server
+      - port-manager
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_ENV=staging
+    depends_on:
+      - eureka-server
+      - port-manager 

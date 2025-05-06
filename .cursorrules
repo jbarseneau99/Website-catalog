@@ -18,6 +18,9 @@ build:
     - docker-compose.yml
   - pre_build:
     - command: ./stop-all.sh
+    - env:
+      - JAVA_HOME=/opt/homebrew/Cellar/openjdk@17/17.0.15/libexec/openjdk.jdk/Contents/Home
+      - PATH=$JAVA_HOME/bin:$PATH
   - post_build:
     - command: ./run-system.sh
 
@@ -43,10 +46,87 @@ dev:
       - api-gateway/**/*.java
       - service-discovery/**/*.java
     - pre_command: ./stop-all.sh
+    - env:
+      - SPRING_PROFILES_ACTIVE=dev
+      - MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
+
+# Environment Configuration
+environments:
+  dev:
+    - env:
+      - SPRING_PROFILES_ACTIVE=dev
+      - MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
+      - PORT_MANAGER_URL=http://localhost:8090
+  staging:
+    - env:
+      - SPRING_PROFILES_ACTIVE=staging
+      - MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog-staging
+      - PORT_MANAGER_URL=http://port-manager:8090
+  production:
+    - env:
+      - SPRING_PROFILES_ACTIVE=prod
+      - MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog-prod
+      - PORT_MANAGER_URL=http://port-manager:8090
+
+# Service Configuration
+services:
+  port-manager:
+    - port: 8090  # Fixed port for Port Manager
+    - dynamic_port_range: 8081-8999
+    - excluded_ports: [8761]  # Eureka Server fixed port
+  
+  eureka:
+    - port: 8761  # Fixed port for Eureka
+
+  url-validation:
+    - dynamic_port: true
+    - port_range: 8081-8089
+
+  nlp-service:
+    - dynamic_port: true
+    - port_range: 8081-8089
+
+  catalog-processor:
+    - dynamic_port: true
+    - port_range: 8081-8089
+
+# Process Management
+processes:
+  - patterns:
+    - "java -jar.*eureka-server"
+    - "java -jar.*api-gateway"
+    - "java -jar.*nlp-service"
+    - "java -jar.*catalog-processor"
+    - "java -jar.*url-validation"
+    - "java -jar.*port-manager"
+    - "node.*npm"
+  - cleanup:
+    command: |
+      pkill -f "java -jar.*" || true
+      pkill -f "node.*npm" || true
+      docker-compose down || true
+  - startup_order:
+    - eureka-server
+    - port-manager
+    - url-validation
+    - nlp-service
+    - catalog-processor
+    - ui
+
+# Database Configuration
+db:
+  type: mongodb-atlas
+  uri: mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net
+  options:
+    - retryWrites=true
+    - w=majority
+  databases:
+    dev: website-catalog
+    staging: website-catalog-staging
+    prod: website-catalog-prod
 
 # Test Configuration
 test:
-  # Unit Tests
   unit:
     - command: mvn test
     - watch:
@@ -54,19 +134,11 @@ test:
       - common/**/test/**/*.java
       - ui/src/**/*.test.{ts,tsx,js,jsx}
   
-  # Integration Tests
   integration:
     - command: mvn verify -P integration-test
     - watch:
       - services/**/it/**/*.java
       - services/**/integration/**/*.java
-
-# Environment Files
-env:
-  - config/*.template
-  - config/services/*.template
-  - services/*/.env
-  - ui/.env
 
 # Docker Rules
 docker:
@@ -80,41 +152,6 @@ docker:
   - env:
     - DOCKER_BUILDKIT=1
     - COMPOSE_DOCKER_CLI_BUILD=1
-
-# Process Management
-processes:
-  - patterns:
-    - "java -jar.*eureka-server"
-    - "java -jar.*api-gateway"
-    - "java -jar.*nlp-service"
-    - "java -jar.*catalog-processor"
-    - "java -jar.*url-validation"
-    - "node.*npm"
-  - cleanup:
-    command: |
-      pkill -f "java -jar.*" || true
-      pkill -f "node.*npm" || true
-      docker-compose down || true
-
-# Linting & Formatting
-lint:
-  java:
-    - command: mvn checkstyle:check
-    - watch:
-      - services/**/*.java
-      - common/**/*.java
-      - api-gateway/**/*.java
-      - service-discovery/**/*.java
-  
-  typescript:
-    - command: cd ui && npm run lint
-    - watch:
-      - ui/src/**/*.{ts,tsx}
-
-# Database
-db:
-  - command: docker-compose up mongodb
-  - pre_command: docker-compose stop mongodb
 
 # Ignore Rules
 ignore:
@@ -155,4 +192,303 @@ ignore:
   
   # Documentation
   - **/*.md
-  - docs/**/* 
+  - docs/**/*
+
+# Empirical Analysis Methodology
+
+## 1. Evidence Collection Requirements
+
+### Process Verification
+Must use system commands to verify actual state:
+```bash
+ps aux | grep <process>  # Verify PIDs (e.g., 26545, 26671, 26708)
+lsof -i :<port>         # Verify ports (8761, 8090, 8081)
+netstat -an | grep LISTEN  # Verify listening sockets
+```
+
+### Service Health Verification
+Must perform direct HTTP calls:
+```bash
+curl -v http://localhost:8761/actuator/health
+curl -v http://localhost:8090/actuator/health
+curl -v http://localhost:8081/actuator/health
+```
+
+## 2. Evidence Analysis Requirements
+
+### Log Analysis (Secondary Evidence Only)
+Example from our actual logs:
+```
+2025-05-05 22:11:50.992 DEBUG 26545 --- [nio-8761-exec-8] o.s.web.servlet.DispatcherServlet : GET "/actuator/health"
+2025-05-05 22:11:50.996 DEBUG 26545 --- [nio-8761-exec-8] o.s.web.servlet.DispatcherServlet : Completed 200 OK
+```
+- Logs alone are NOT sufficient evidence
+- Must correlate with system-level verification
+- Must verify timestamps are current
+
+### Error Analysis
+Example from our actual errors:
+```
+Error: Unable to access jarfile service-discovery/target/eureka-server.jar
+[1]  + exit 1     java -jar service-discovery/target/eureka-server.jar
+```
+Must verify:
+- Error source (PID, timestamp)
+- Error impact on system
+- Error persistence/transience
+
+## 3. Verification Requirements
+
+### Primary Evidence (Required)
+- Process existence (PIDs)
+- Port bindings
+- Network connectivity
+- System resource usage
+
+### Secondary Evidence (Supporting Only)
+- Log entries
+- Error messages
+- Configuration files
+- Health check responses
+
+## 4. Time-Series Requirements
+
+### Continuous Monitoring
+Must verify over time:
+- Process stability
+- Resource usage
+- Error patterns
+- Service health
+
+### Interval Verification
+Example from our logs:
+```
+22:10:50.992 - Health check
+22:11:01.137 - Eviction task
+22:11:16.335 - Port monitor
+22:11:20.992 - Health check
+```
+- Must show consistent operation
+- Must verify regular patterns
+- Must detect anomalies
+
+## 5. Documentation Requirements
+
+### Command Documentation
+Must document:
+```bash
+# Example verification chain
+ps aux | grep java  # Process check
+lsof -i :8761      # Port check
+curl localhost:8761/health  # Health check
+```
+
+### Evidence Chain
+Must maintain:
+- Verification timestamps
+- Command outputs
+- Error states
+- System responses
+
+## 6. No Inference Rule
+
+### Wrong (Inference-based):
+"Service is running because logs show 200 OK"
+
+### Correct (Evidence-based):
+1. Verify process exists (PID)
+2. Verify port bound
+3. Verify network access
+4. Verify service response
+5. Verify consistent behavior
+
+## 7. Failure Analysis
+
+### Evidence Collection
+Must collect when failures occur:
+- System state
+- Process state
+- Resource state
+- Error messages
+
+### Root Cause Analysis
+Must verify:
+- Failure point
+- Impact scope
+- Recovery state
+- System stability
+
+## 8. Reporting Requirements
+
+### Status Reports
+Must include:
+- Direct evidence
+- Verification methods
+- Failed checks
+- System state changes
+
+### Conclusions
+Must be:
+- Evidence-based
+- Reproducible
+- Verifiable
+- Time-stamped 
+
+# CORS Standards and Guidelines
+cors_standards:
+  # Technology Stack Requirements
+  stack:
+    - type: "servlet"  # Must use Spring MVC (servlet stack)
+    - forbidden: ["reactive", "WebFlux", "CorsWebFilter"]
+    - framework: "Spring MVC"
+  
+  # Required Configuration Files
+  required_files:
+    - file: "WebConfig.java"
+      content: |
+        @Configuration
+        public class WebConfig implements WebMvcConfigurer {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                    .allowedOrigins("http://localhost:3000")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true)
+                    .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+                
+                registry.addMapping("/actuator/**")
+                    .allowedOrigins("http://localhost:3000")
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true)
+                    .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
+            }
+        }
+    
+    - file: "application.yml"
+      content: |
+        management:
+          endpoints:
+            web:
+              cors:
+                allowed-origins: "http://localhost:3000"
+                allowed-methods: "*"
+                allowed-headers: "*"
+                allow-credentials: true
+                exposed-headers:
+                  - "Access-Control-Allow-Origin"
+                  - "Access-Control-Allow-Credentials"
+  
+  # Validation Rules
+  validation:
+    required_headers:
+      - "Access-Control-Allow-Origin"
+      - "Access-Control-Allow-Credentials"
+      - "Access-Control-Allow-Methods"
+      - "Access-Control-Allow-Headers"
+    forbidden_patterns:
+      - "CorsWebFilter"
+      - "Multiple CORS configurations in same service"
+      - "Mixed reactive and servlet stacks"
+    tests:
+      - "Browser-based health check from UI (localhost:3000)"
+      - "Direct actuator endpoint access"
+      - "Credentials included in requests"
+      - "Headers properly exposed"
+
+  # Service-specific Requirements
+  services:
+    all:
+      - use_servlet_stack: true
+      - cors_config_type: "WebMvcConfigurer"
+      - actuator_cors_enabled: true
+    api_gateway:
+      - additional_config: "globalcors in application.yml"
+    eureka:
+      - additional_config: "management.endpoints.web.cors"
+
+# Microservice Architecture Rules
+microservices:
+  required_services:
+    service-discovery:
+      port: 8761
+      dependencies: 
+        - spring-cloud-starter-netflix-eureka-server
+        - spring-boot-starter-actuator
+      annotations: 
+        - "@EnableEurekaServer"
+      required_config:
+        - eureka.client.registerWithEureka=false
+        - eureka.client.fetchRegistry=false
+    
+    api-gateway:
+      port: 8080
+      dependencies:
+        - spring-cloud-starter-gateway
+        - spring-cloud-starter-netflix-eureka-client
+        - spring-boot-starter-actuator
+      annotations:
+        - "@EnableEurekaClient"
+      required_config:
+        - spring.cloud.gateway.discovery.locator.enabled=true
+
+  service_structure:
+    required_files:
+      - pom.xml
+      - src/main/java/**/Application.java
+      - src/main/resources/application.yml
+    required_directories:
+      - src/main/java
+      - src/main/resources
+      - src/test/java
+    parent_pom:
+      groupId: com.spacedataarchive
+      artifactId: space-data-archive-microservices
+      version: 1.0-SNAPSHOT
+
+  port_allocations:
+    fixed:
+      eureka_server: 8761
+      api_gateway: 8080
+      port_manager: 8090
+      ui: 3000
+    dynamic:
+      range: [8081, 8089]
+      managed_by: port_manager
+
+  cors_configuration:
+    allowed_origins: 
+      - http://localhost:3000
+    allowed_methods: 
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowed_headers: "*"
+    allow_credentials: true
+    exposed_headers:
+      - Access-Control-Allow-Origin
+      - Access-Control-Allow-Credentials
+    max_age: 3600
+
+  health_check:
+    required_endpoints:
+      - /actuator/health
+    configuration:
+      show_details: always
+      cors_enabled: true
+    retry:
+      max_attempts: 30
+      interval_seconds: 2
+
+  logging:
+    development:
+      level:
+        root: INFO
+        com.spacedataarchive: DEBUG
+        org.springframework.web.cors: DEBUG
+    file:
+      path: logs
+      pattern: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n" 

@@ -1,26 +1,65 @@
 # Build outputs
 **/target/
-ui/build/
-ui/dist/
+**/build/
+**/dist/
 **/node_modules/
 
-# IDE and OS files
+# IDE and Editor files
 **/.idea/
 **/.vscode/
+**/.project
+**/.classpath
+**/.settings/
+**/.factorypath
+*.iml
+*.iws
+*.ipr
+.metals/
+.bloop/
+
+# OS files
 **/.DS_Store
+**/.Spotlight-V100
+**/.Trashes
+**/Thumbs.db
+**/ehthumbs.db
+**/Desktop.ini
 
 # Logs and temp files
 **/logs/
 **/temp/
 **/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Environment files
 **/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
 **/mongodb.env
 services/*/.env
-.env.datacenter
-**/anthropic.properties
-**/env.txt
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Test coverage
+**/coverage/
+**/.nyc_output/
+
+# Misc
+**/.sass-cache/
+**/.cache/
+.cursor/
+.cursorrules
 
 # Git
 **/.git/ 

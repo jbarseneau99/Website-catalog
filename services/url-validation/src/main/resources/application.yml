@@ -1,27 +1,61 @@
 server:
-  port: 8083
+  port: 8081  # Fixed port
 
 spring:
   application:
-    name: url-validation
+    name: URL-VALIDATION
+  main:
+    allow-bean-definition-overriding: true
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI}
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog}
+
+port-manager:
+  url: ${PORT_MANAGER_URL:http://localhost:8090}
+  service-name: ${spring.application.name}
+  enabled: false  # Disable port manager since we're using a fixed port
+  range:
+    min: 8081
+    max: 8089
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://eureka-server:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761}/eureka/
     registerWithEureka: true
     fetchRegistry: true
   instance:
     preferIpAddress: true
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "*"
+      base-path: /actuator
+      cors:
+        allowed-origins: "http://localhost:3000"
+        allowed-methods: "*"
+        allowed-headers: "*"
+        allow-credentials: true
+        exposed-headers:
+          - "Access-Control-Allow-Origin"
+          - "Access-Control-Allow-Credentials"
   endpoint:
     health:
-      show-details: always 
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  health:
+    mongodb:
+      enabled: true
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  server:
+    port: 0  # Dynamic port for management endpoints 

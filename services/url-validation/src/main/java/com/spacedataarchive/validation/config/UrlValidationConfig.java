@@ -3,6 +3,7 @@ package com.spacedataarchive.validation.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * Configuration properties for URL validation service.
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "url.validation")
+@Import(MongoConfig.class)
 public class UrlValidationConfig {
     
     /**

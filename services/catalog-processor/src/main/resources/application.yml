@@ -1,30 +1,85 @@
 server:
-  port: 8082
+  port: 8083  # Fixed port
 
 spring:
   application:
-    name: catalog-processor
+    name: CATALOG-PROCESSOR
   data:
     mongodb:
-      uri: mongodb://localhost:27017/spacedataarchive
+      uri: ${MONGODB_URI:mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog}
+
+port-manager:
+  url: ${PORT_MANAGER_URL:http://localhost:8090}
+  service-name: ${spring.application.name}
+  enabled: false  # Disable port manager since we're using a fixed port
+  range:
+    min: 8083
+    max: 8089
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761}/eureka/
     registerWithEureka: true
     fetchRegistry: true
   instance:
     preferIpAddress: true
+    hostname: ${HOSTNAME:localhost}
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+    statusPageUrlPath: /actuator/info
+    healthCheckUrlPath: /actuator/health
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "*"
+      base-path: /actuator
   endpoint:
     health:
       show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  health:
+    mongodb:
+      enabled: true
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  server:
+    port: 0  # Dynamic port for management endpoints
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+    baggage:
+      correlation:
+        enabled: true
+    propagation:
+      type: W3C
+
+opentelemetry:
+  traces:
+    exporter: jaeger
+  metrics:
+    exporter: prometheus
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    root: INFO
+    com.space: DEBUG
+    org.springframework.web: INFO
 
 catalog-processor:
   concurrent-processes: 10

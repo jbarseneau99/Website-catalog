@@ -24,10 +24,12 @@
     </properties>
 
     <modules>
-        <module>services/common</module>
+        <module>service-discovery</module>
+        <module>api-gateway</module>
         <module>services/url-validation</module>
         <module>services/nlp-service</module>
         <module>services/catalog-processor</module>
+        <module>services/port-manager</module>
     </modules>
 
     <dependencyManagement>

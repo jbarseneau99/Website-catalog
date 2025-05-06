@@ -53,6 +53,11 @@
             <version>4.5.4</version>
             <classifier>models</classifier>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

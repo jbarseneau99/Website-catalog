@@ -1,7 +1,6 @@
 package com.spacedataarchive.nlp.service;
 
 import com.spacedataarchive.common.model.SpaceData;
-import com.spacedataarchive.common.model.ValidationStatus;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
@@ -31,7 +30,7 @@ public class NlpService {
 
             spaceData.setKeywords(keywords);
             spaceData.setLastProcessedAt(LocalDateTime.now());
-            spaceData.setStatus(ValidationStatus.SUCCESS);
+            spaceData.setStatus(SpaceData.ProcessingStatus.COMPLETED);
         }
         return spaceData;
     }

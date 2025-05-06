@@ -1,0 +1,17 @@
+{
+  "name": "website-catalog",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["ui"],
+  "scripts": {
+    "prestart": "bash scripts/kill-ports.sh",
+    "start": "bash scripts/start-all.sh",
+    "stop": "bash scripts/stop-all.sh",
+    "clean": "bash scripts/clean.sh",
+    "status": "bash scripts/check-status.sh",
+    "new-service": "bash scripts/create-service.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
+} 
