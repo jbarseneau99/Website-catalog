@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    image: ${DOCKER_USERNAME}/eureka-server:production
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - PROC_NAME=EUREKA-SERVER
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+  port-manager:
+    image: ${DOCKER_USERNAME}/port-manager:production
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - PROC_NAME=PORT-MANAGER
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=${MONGODB_URI}
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - eureka-server
+
+  url-validation:
+    image: ${DOCKER_USERNAME}/url-validation:production
+    ports:
+      - "8100:8100"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - PROC_NAME=URL-VALIDATION
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=${MONGODB_URI}
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - eureka-server
+
+  nlp-service:
+    image: ${DOCKER_USERNAME}/nlp-service:production
+    ports:
+      - "8101:8101"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - PROC_NAME=NLP-SERVICE
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=${MONGODB_URI}
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - eureka-server
+
+  catalog-processor:
+    image: ${DOCKER_USERNAME}/catalog-processor:production
+    ports:
+      - "8102:8102"
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - PROC_NAME=CATALOG-PROCESSOR
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=${MONGODB_URI}
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - eureka-server
+
+  ui:
+    image: ${DOCKER_USERNAME}/ui:production
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - eureka-server
+      - port-manager
+      - url-validation
+      - nlp-service
+      - catalog-processor 

@@ -5,8 +5,8 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY target/nlp-service-*.jar app.jar
+COPY target/nlp-service-1.0-SNAPSHOT.jar app.jar
 
-EXPOSE 8081
+EXPOSE 8101
 
-ENTRYPOINT ["java", "-jar", "-DMACH33_NAME=Mach33_NLP_Service", "app.jar"] 
+ENTRYPOINT ["java", "-jar", "app.jar"] 

@@ -1,113 +1,122 @@
-# Microservices Project
+# Website Catalog Microservices
 
-This project follows a standard microservices architecture with the following structure:
+This project is a microservices-based website catalog system with three deployment environments: development, staging, and production.
 
-## Project Structure
+## Environment Setup
 
+### Development Environment
+- Uses JAR files with Atlas Hosted MongoDB
+- Local development with direct JAR execution
+- Services run on localhost with defined ports
+
+```bash
+# Start development environment
+cd scripts
+./start-microservices.sh -e dev
 ```
-├── infrastructure/           # Core infrastructure services
-│   ├── service-discovery/   # Service discovery (Eureka)
-│   ├── api-gateway/        # API Gateway
-│   └── config-server/      # Configuration server
-│
-├── services/               # Business domain services
-│   ├── catalog-processor/ # Catalog processing service
-│   ├── nlp-service/       # Natural Language Processing service
-│   ├── port-manager/      # Port management service
-│   └── url-validation/    # URL validation service
-│
-├── common/                # Shared libraries and utilities
-│   └── src/              # Common code used across services
-│
-├── ui/                    # Frontend application
-│
-├── deployment/           # Deployment and infrastructure as code
-│   ├── kubernetes/      # Kubernetes manifests
-│   ├── docker/          # Docker compose files
-│   ├── scripts/         # Deployment and utility scripts
-│   └── environments/    # Environment-specific configurations
-│
-└── docs/                # Project documentation
+
+### Staging Environment
+- Uses Docker Desktop with Atlas Hosted MongoDB
+- Containerized services with Docker Compose
+- Automated deployment through GitHub Actions
+
+```bash
+# Start staging environment
+docker-compose -f docker-compose.staging.yml up -d
+```
+
+### Production Environment
+- Uses GitHub-hosted runners with Atlas Hosted MongoDB
+- Containerized services with high availability
+- Protected deployment with manual approval
+- Multiple replicas for each service
+
+```bash
+# Start production environment
+docker-compose -f docker-compose.production.yml up -d
 ```
 
 ## Services
 
-### Infrastructure Services
+1. Eureka Server (Service Discovery)
+   - Port: 8761
+   - Process Name: EUREKA-SERVER
 
-1. **Service Discovery (Eureka)**
-   - Service registration and discovery
-   - Location: `infrastructure/service-discovery`
+2. Port Manager
+   - Port: 8090
+   - Process Name: PORT-MANAGER
 
-2. **API Gateway**
-   - Route management and load balancing
-   - Location: `infrastructure/api-gateway`
+3. URL Validation Service
+   - Port: 8100
+   - Process Name: URL-VALIDATION
 
-3. **Config Server**
-   - Centralized configuration management
-   - Location: `infrastructure/config-server`
+4. NLP Service
+   - Port: 8101
+   - Process Name: NLP-SERVICE
 
-### Business Services
+5. Catalog Processor
+   - Port: 8102
+   - Process Name: CATALOG-PROCESSOR
 
-1. **Catalog Processor**
-   - Location: `services/catalog-processor`
-   - Purpose: Process and manage catalog data
+6. UI Application
+   - Port: 3000
+   - React-based frontend
 
-2. **NLP Service**
-   - Location: `services/nlp-service`
-   - Purpose: Natural language processing capabilities
+## GitHub Workflow
 
-3. **Port Manager**
-   - Location: `services/port-manager`
-   - Purpose: Manage port allocations and configurations
+1. Development:
+   - Create feature branch from development
+   - Make changes and commit
+   - Create PR to development branch
+   - Automated tests run
+   - Merge if approved
 
-4. **URL Validation**
-   - Location: `services/url-validation`
-   - Purpose: Validate and process URLs
+2. Staging:
+   - Create PR from development to staging
+   - Automated tests and Docker builds
+   - Deploy to staging environment
+   - Test in staging
 
-## Development
+3. Production:
+   - Create PR from staging to production
+   - Requires manual approval
+   - Automated deployment with high availability
+   - Multiple replicas for each service
 
-### Prerequisites
-- Java 17+
-- Maven
-- Docker
-- Kubernetes (optional)
+## Required Environment Variables
 
-### Building
+- `MONGODB_URI`: MongoDB Atlas connection string
+- `DOCKER_USERNAME`: Docker Hub username
+- `DOCKER_PASSWORD`: Docker Hub password
+
+## Setup Instructions
+
+1. Clone the repository
+2. Set up environment variables in GitHub repository settings
+3. Create environments (development, staging, production)
+4. Configure branch protection rules
+5. Set up required secrets for each environment
+
+## Development Workflow
+
+1. Create feature branch:
 ```bash
-# Build all services
-./deployment/scripts/build.sh
-
-# Build specific service
-cd services/<service-name>
-mvn clean package
+git checkout -b feature/your-feature development
 ```
 
-### Running Locally
+2. Make changes and commit:
 ```bash
-# Start all services using Docker Compose
-cd deployment/docker
-docker-compose up
-
-# Start specific service
-cd services/<service-name>
-mvn spring-boot:run
+git add .
+git commit -m "Your commit message"
 ```
 
-### Deployment
+3. Push changes:
 ```bash
-# Deploy to Kubernetes
-cd deployment/kubernetes
-kubectl apply -f .
+git push origin feature/your-feature
 ```
 
-## Contributing
+4. Create Pull Request to development branch
 
-1. Each service should follow the standard Maven project structure
-2. Use the common library for shared code
-3. Follow the established coding standards
-4. Write unit tests for new features
-5. Update documentation as needed
+5. After approval and merge, create PR to staging
 
-## License
-
-[Your License Here] 
+6. After testing in staging, create PR to production 

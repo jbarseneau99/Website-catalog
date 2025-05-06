@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    build: 
+      context: ./service-discovery
+      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/eureka-server:staging
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+      - PROC_NAME=EUREKA-SERVER
+
+  port-manager:
+    build:
+      context: ./services/port-manager
+      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/port-manager:staging
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+      - PROC_NAME=PORT-MANAGER
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - eureka-server
+
+  url-validation:
+    build:
+      context: ./services/url-validation
+      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/url-validation:staging
+    ports:
+      - "8100:8100"
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+      - PROC_NAME=URL-VALIDATION
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - eureka-server
+
+  nlp-service:
+    build:
+      context: ./services/nlp-service
+      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/nlp-service:staging
+    ports:
+      - "8101:8101"
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+      - PROC_NAME=NLP-SERVICE
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - eureka-server
+
+  catalog-processor:
+    build:
+      context: ./services/catalog-processor
+      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/catalog-processor:staging
+    ports:
+      - "8102:8102"
+    environment:
+      - SPRING_PROFILES_ACTIVE=staging
+      - PROC_NAME=CATALOG-PROCESSOR
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATA_MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - eureka-server
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    image: ${DOCKER_USERNAME}/ui:staging
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=staging
+    depends_on:
+      - eureka-server
+      - port-manager
+      - url-validation
+      - nlp-service
+      - catalog-processor 
