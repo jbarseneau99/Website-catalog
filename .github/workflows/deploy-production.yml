@@ -1,0 +1,115 @@
+name: Deploy Mach33 Microservices Platform (Production)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    env:
+      SPRING_PROFILES_ACTIVE: prod
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: Build with Maven
+      run: ./scripts/build-all.sh production
+      
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      
+    - name: Build and push Docker images
+      env:
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Tag images with repository name
+        export REPO_NAME=$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')
+        
+        # Build and push each service image
+        for service in infrastructure/service-discovery infrastructure/api-gateway services/port-manager services/url-validation services/nlp-service services/catalog-processor; do
+          service_name=$(basename $service)
+          echo "Building and pushing $service_name..."
+          
+          # Build the image with GitHub repository tag
+          docker build -t "ghcr.io/$REPO_NAME/$service_name:latest" ./$service
+          
+          # Push the image
+          docker push "ghcr.io/$REPO_NAME/$service_name:latest"
+        done
+        
+    - name: Update docker-compose.yml for production
+      run: |
+        # Update image names in docker-compose.yml to use GHCR
+        export REPO_NAME=$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')
+        
+        # Create temporary file
+        cat docker-compose.yml > docker-compose.temp
+        
+        # Update each service to use pre-built image from GHCR
+        for service in service-discovery api-gateway port-manager url-validation nlp-service catalog-processor; do
+          # Replace build section with image from GHCR
+          sed -i "s|build:.*\n.*context:.*$service.*\n.*dockerfile:.*|image: ghcr.io/$REPO_NAME/$service:latest|g" docker-compose.temp
+        done
+        
+        # Replace original file
+        mv docker-compose.temp docker-compose.yml
+        
+        # Show the updated docker-compose.yml
+        cat docker-compose.yml
+        
+    - name: Deploy to Production Environment
+      run: |
+        if [ -z "$MONGODB_URI" ]; then
+          echo "Error: MONGODB_URI secret is not set."
+          exit 1
+        fi
+        
+        # Create .env file for docker-compose
+        echo "SPRING_PROFILES_ACTIVE=prod" > .env
+        echo "MONGODB_URI=$MONGODB_URI" >> .env
+        
+        # Run production deployment script
+        ./scripts/run-production.sh
+        
+    - name: Verify Deployment
+      run: |
+        # Give services time to stabilize
+        sleep 30
+        
+        # Check if each service is responding
+        curl -s http://localhost:8761/actuator/health
+        curl -s http://localhost:8080/actuator/health
+        curl -s http://localhost:8081/actuator/health
+        curl -s http://localhost:8082/actuator/health
+        curl -s http://localhost:8083/actuator/health
+        curl -s http://localhost:8084/actuator/health
+        
+        # Show containers status
+        docker-compose ps
+        
+    - name: Deployment Summary
+      run: |
+        echo "✅ Mach33 Microservices Platform deployed to production environment"
+        echo "Using MongoDB Atlas for data persistence"
+        echo "Services are running in Docker containers" 
