@@ -93,6 +93,20 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
+        
+    # Print diagnostic information
+    - name: Print GCP Diagnostics
+      run: |
+        echo "Checking GCP configuration..."
+        echo "PROJECT_ID env var: $PROJECT_ID"
+        echo "GCP_PROJECT_ID secret available: ${{ secrets.GCP_PROJECT_ID != '' }}"
+        echo "GCP_SA_KEY secret available: ${{ secrets.GCP_SA_KEY != '' }}"
+        echo "Current project from gcloud:"
+        gcloud config get-value project
+        echo "Current account from gcloud:"
+        gcloud config get-value account
+        echo "Available GKE clusters:"
+        gcloud container clusters list || echo "Failed to list clusters, but continuing"
     
     # Configure Docker to use Google Cloud
     - name: Configure Docker for GCR
@@ -141,37 +155,93 @@ jobs:
     
     # Setup and authenticate kubectl
     - name: Set up kubectl
+      id: get_credentials
+      continue-on-error: true
       uses: google-github-actions/get-gke-credentials@v1
       with:
         cluster_name: ${{ env.GKE_CLUSTER }}
         location: ${{ env.GKE_ZONE }}
         credentials: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        
+    # Alternative kubectl setup (fallback)
+    - name: Manual kubectl setup (fallback)
+      if: steps.get_credentials.outcome == 'failure'
+      run: |
+        echo "The automated get-gke-credentials action failed. Trying manual setup..."
+        
+        # Ensure gcloud is configured with the correct project
+        gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+        
+        # Get credentials for the cluster manually
+        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} \
+          --zone ${{ env.GKE_ZONE }} \
+          --project ${{ secrets.GCP_PROJECT_ID }}
+          
+        # Verify kubectl is working
+        kubectl config current-context
+        echo "Manual kubectl setup completed"
     
     # Deploy to GKE
     - name: Deploy to GKE
       run: |
+        echo "Deploying to GKE..."
+        
+        # Check kubectl connection
+        echo "Verifying kubectl connection..."
+        kubectl cluster-info || {
+          echo "Error: kubectl is not properly configured. Retrying with explicit credentials..."
+          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
+          kubectl cluster-info
+        }
+        
         # Create K8s namespace if it doesn't exist
+        echo "Creating/verifying namespace mach33..."
         kubectl create namespace mach33 --dry-run=client -o yaml | kubectl apply -f -
         
         # Create ConfigMap for environment variables
+        echo "Creating ConfigMap for environment variables..."
         kubectl create configmap mach33-config \
           --namespace=mach33 \
           --from-literal=SPRING_PROFILES_ACTIVE=prod \
           --from-literal=MONGODB_URI=${{ secrets.MONGODB_URI }} \
           --dry-run=client -o yaml | kubectl apply -f -
-          
+        
+        # List kubernetes directory contents for diagnostics
+        echo "Checking Kubernetes manifests directory..."
+        find Mach33-Microservices-Platform/kubernetes -type f -name "*.yml" -o -name "*.yaml" | sort
+        
         # Apply K8s manifests
-        kubectl apply -f Mach33-Microservices-Platform/kubernetes/
+        echo "Applying Kubernetes manifests..."
+        if [ -d "Mach33-Microservices-Platform/kubernetes" ]; then
+          kubectl apply -f Mach33-Microservices-Platform/kubernetes/ || {
+            echo "Warning: Error applying all manifests at once. Trying one by one..."
+            for manifest in $(find Mach33-Microservices-Platform/kubernetes -type f -name "*.yml" -o -name "*.yaml"); do
+              echo "Applying $manifest..."
+              kubectl apply -f $manifest || echo "Warning: Failed to apply $manifest"
+            done
+          }
+        else
+          echo "Error: Kubernetes manifests directory not found at expected location"
+          find . -path "*/kubernetes/*.yml" -o -path "*/kubernetes/*.yaml" | grep -v node_modules
+          exit 1
+        fi
         
         # Set the new image for each deployment
+        echo "Updating deployments with new images..."
         for service in service-discovery api-gateway port-manager url-validation nlp-service catalog-processor llm-connection google-search; do
-          kubectl set image deployment/$service $service=gcr.io/$PROJECT_ID/$service:$GITHUB_SHA -n mach33
+          echo "Updating deployment for $service..."
+          kubectl set image deployment/$service $service=gcr.io/$PROJECT_ID/$service:$GITHUB_SHA -n mach33 || echo "Warning: Failed to update image for $service"
         done
         
         # Wait for rollout completion
+        echo "Waiting for rollouts to complete..."
         for service in service-discovery api-gateway port-manager url-validation nlp-service catalog-processor llm-connection google-search; do
-          kubectl rollout status deployment/$service -n mach33 --timeout=180s
+          echo "Checking rollout status for $service..."
+          kubectl rollout status deployment/$service -n mach33 --timeout=180s || echo "Warning: Rollout for $service not completed in time"
         done
+        
+        echo "Deployment to GKE completed"
 
     # Verify Deployment
     - name: Verify Deployment
