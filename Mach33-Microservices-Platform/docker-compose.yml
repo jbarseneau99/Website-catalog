@@ -1,0 +1,194 @@
+services:
+  # Infrastructure Services
+  service-discovery:
+    build:
+      context: ./infrastructure/service-discovery
+      dockerfile: Dockerfile
+    container_name: mach33-discovery
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://0.0.0.0:8761/eureka/
+      - SERVER_ADDRESS=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8761/actuator/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
+    networks:
+      - mach33-network
+
+  api-gateway:
+    build:
+      context: ./infrastructure/api-gateway
+      dockerfile: Dockerfile
+    container_name: mach33-gateway
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 40s
+    networks:
+      - mach33-network
+
+  # Business Services
+  port-manager:
+    build:
+      context: ./services/port-manager
+      dockerfile: Dockerfile
+    container_name: mach33-port-manager
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - MONGODB_URI=${MONGODB_URI}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - mach33-network
+
+  url-validation:
+    build:
+      context: ./services/url-validation
+      dockerfile: Dockerfile
+    container_name: mach33-url-validation
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - MONGODB_URI=${MONGODB_URI}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - mach33-network
+
+  nlp-service:
+    build:
+      context: ./services/nlp-service
+      dockerfile: Dockerfile
+    container_name: mach33-nlp-service
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - MONGODB_URI=${MONGODB_URI}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+    networks:
+      - mach33-network
+
+  catalog-processor:
+    build:
+      context: ./services/catalog-processor
+      dockerfile: Dockerfile
+    container_name: mach33-catalog-processor
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - MONGODB_URI=${MONGODB_URI}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+      url-validation:
+        condition: service_started
+      nlp-service:
+        condition: service_started
+    networks:
+      - mach33-network
+
+  llm-connection:
+    build:
+      context: ./services/llm-connection
+      dockerfile: Dockerfile
+    container_name: mach33-llm-connection
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - MONGODB_URI=${MONGODB_URI}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
+    networks:
+      - mach33-network
+
+  google-search:
+    build:
+      context: ./services/google-search
+      dockerfile: Dockerfile
+    container_name: mach33-google-search
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8762:8762"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-local}
+      - MONGODB_URI=${MONGODB_URI}
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-discovery:8761/eureka/
+    depends_on:
+      service-discovery:
+        condition: service_healthy
+      api-gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8762/actuator/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
+    networks:
+      - mach33-network
+
+networks:
+  mach33-network:
+    driver: bridge 
