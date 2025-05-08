@@ -5,6 +5,11 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+# Explicit permissions for GITHUB_TOKEN
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -108,7 +113,12 @@ jobs:
         export REPO_NAME=$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')
         
         echo "Repository name: $REPO_NAME"
+        echo "Repository owner: $GITHUB_REPOSITORY_OWNER"
         echo "Building and pushing images..."
+        
+        # Print package visibility info
+        echo "Package visibility settings:"
+        echo "GITHUB_TOKEN permissions: ${{ toJson(github.token_permissions) }}"
         
         # Define all services to build
         SERVICES=(
@@ -134,12 +144,28 @@ jobs:
           fi
           
           # Build the image with GitHub repository tag
-          docker build -t "ghcr.io/$REPO_NAME/$service_name:latest" ./Mach33-Microservices-Platform/$service
+          image_name="ghcr.io/$REPO_NAME/$service_name:latest"
+          echo "Building image: $image_name"
+          docker build -t "$image_name" ./Mach33-Microservices-Platform/$service
           
-          # Push the image
-          docker push "ghcr.io/$REPO_NAME/$service_name:latest"
+          # Push the image with detailed output
+          echo "Pushing image: $image_name"
+          docker push "$image_name" || {
+            echo "Error pushing image $image_name"
+            echo "Checking authentication status:"
+            docker login ghcr.io -u $GITHUB_REPOSITORY_OWNER -p $GITHUB_TOKEN || echo "Login failed"
+            echo "Retrying push with explicit login..."
+            docker login ghcr.io -u $GITHUB_REPOSITORY_OWNER -p $GITHUB_TOKEN && docker push "$image_name"
+          }
+          
+          echo "Verifying image publication:"
+          curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/user/packages/container/$service_name/versions" || \
+            echo "Could not verify package publication via API"
         done
         
+        echo "All images built and pushed (or attempted)"
+      
     - name: Update docker-compose.yml for production
       run: |
         # Navigate to project directory
