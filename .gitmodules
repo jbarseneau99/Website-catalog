@@ -1,0 +1,3 @@
+# Git Submodules Configuration
+# This file is intentionally left empty to prevent submodule checkout issues in CI/CD.
+# If you need to add submodules in the future, add them here. 
