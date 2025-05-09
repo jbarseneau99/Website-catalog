@@ -5,10 +5,12 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
-# Explicit permissions for GITHUB_TOKEN
+# Explicit permissions for GITHUB_TOKEN and GCP auth
 permissions:
   contents: read
   packages: write
+  id-token: write
+  actions: read
 
 jobs:
   build-and-deploy:
@@ -28,6 +30,14 @@ jobs:
       run: |
         if [ -z "$MONGODB_URI" ]; then
           echo "::error::MONGODB_URI secret is not set. Please add it in GitHub repository secrets."
+          exit 1
+        fi
+        if [ -z "${{ secrets.GCP_SA_KEY }}" ]; then
+          echo "::error::GCP_SA_KEY secret is not set. Please add it in GitHub repository secrets."
+          exit 1
+        fi
+        if [ -z "${{ secrets.GCP_PROJECT_ID }}" ]; then
+          echo "::error::GCP_PROJECT_ID secret is not set. Please add it in GitHub repository secrets."
           exit 1
         fi
         
@@ -93,12 +103,23 @@ jobs:
         
         echo "✅ Maven build completed"
       
+    # Authenticate to Google Cloud if needed for production
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+    
+    # Setup gcloud CLI
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ secrets.PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}
       
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -149,7 +170,7 @@ jobs:
           docker build -t "$image_name" ./Mach33-Microservices-Platform/$service
           
           # Push the image with detailed output
-          echo "Pushing image: $image_name"
+          echo "Pushing image: $image_name to package registry..."
           docker push "$image_name" || {
             echo "Error pushing image $image_name"
             echo "Checking authentication status:"
@@ -159,9 +180,15 @@ jobs:
           }
           
           echo "Verifying image publication:"
-          curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+          curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" \
             "https://api.github.com/user/packages/container/$service_name/versions" || \
             echo "Could not verify package publication via API"
+          
+          # Try alternative verification
+          echo "Package visibility check (alternative method):"
+          curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/orgs/$GITHUB_REPOSITORY_OWNER/packages/container/$service_name/versions" || \
+            echo "Could not verify package publication via organization API"
         done
         
         echo "All images built and pushed (or attempted)"

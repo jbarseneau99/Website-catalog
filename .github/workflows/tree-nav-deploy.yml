@@ -14,22 +14,48 @@ on:
       - '.github/workflows/tree-nav-deploy.yml'
   workflow_dispatch:  # Allow manual triggering
 
+# Add explicit permissions
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v1
-      
-    - name: Configure kubectl
-      uses: azure/k8s-set-context@v1
+    - name: Verify GCP credentials
+      run: |
+        if [ -z "${{ secrets.GCP_SA_KEY }}" ]; then
+          echo "::error::GCP_SA_KEY secret is not set. Please add it in GitHub repository secrets."
+          exit 1
+        fi
+        if [ -z "${{ secrets.GCP_PROJECT_ID }}" ]; then
+          echo "::error::GCP_PROJECT_ID secret is not set. Please add it in GitHub repository secrets."
+          exit 1
+        fi
+    
+    # First authenticate to Google Cloud
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
       with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        
+    # Then set up the gcloud CLI
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+    
+    # Get GKE credentials for kubectl
+    - name: Get GKE credentials
+      uses: google-github-actions/get-gke-credentials@v1
+      with:
+        cluster_name: mach33-cluster
+        location: us-central1-a
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
         
     - name: Install jq
       run: sudo apt-get install -y jq
@@ -51,6 +77,10 @@ jobs:
     - name: Verify deployment
       run: |
         echo "Verifying deployment..."
+        
+        # Check if kubectl is working properly
+        echo "Verifying kubectl connection to cluster:"
+        kubectl cluster-info
         
         # Check if the ConfigMap exists
         if kubectl get configmap admin-ui-tree-nav -n mach33 &> /dev/null; then

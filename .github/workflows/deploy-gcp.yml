@@ -5,6 +5,13 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+# Add explicit permissions for GCP authentication
+permissions:
+  contents: read
+  id-token: write
+  packages: write
+  actions: read
+
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: mach33-cluster
@@ -23,6 +30,17 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: false  # Explicitly disable submodule checkout
+      
+    - name: Verify GCP credentials
+      run: |
+        if [ -z "${{ secrets.GCP_SA_KEY }}" ]; then
+          echo "::error::GCP_SA_KEY secret is not set. Please add it in GitHub repository secrets."
+          exit 1
+        fi
+        if [ -z "${{ secrets.GCP_PROJECT_ID }}" ]; then
+          echo "::error::GCP_PROJECT_ID secret is not set. Please add it in GitHub repository secrets."
+          exit 1
+        fi
       
     - name: Set up JDK 17
       uses: actions/setup-java@v3
@@ -86,13 +104,16 @@ jobs:
         
         echo "✅ Maven build completed"
     
+    # Authenticate to Google Cloud
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+    
     # Setup gcloud CLI
     - name: Setup Google Cloud CLI
       uses: google-github-actions/setup-gcloud@v1
-      with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
         
     # Print diagnostic information
     - name: Print GCP Diagnostics
@@ -131,6 +152,13 @@ jobs:
     # Build and push Docker images to Google Container Registry
     - name: Build and push Docker images
       run: |
+        # Print debugging information
+        echo "Project ID: ${{ secrets.GCP_PROJECT_ID }}"
+        echo "Building and pushing images to Google Container Registry..."
+        
+        # Manually check gcloud authentication
+        gcloud auth configure-docker gcr.io --quiet
+        
         # Loop through each service and build/push images
         for service in infrastructure/service-discovery infrastructure/api-gateway services/port-manager services/url-validation services/nlp-service services/catalog-processor services/llm-connection services/google-search; do
           service_name=$(basename $service)
@@ -142,45 +170,52 @@ jobs:
             continue
           fi
           
-          # Build the image
-          docker build -t "gcr.io/$PROJECT_ID/$service_name:$GITHUB_SHA" ./Mach33-Microservices-Platform/$service
+          # Create a minimal Dockerfile if it doesn't exist
+          if [ ! -f "./Mach33-Microservices-Platform/$service/Dockerfile" ]; then
+            echo "Creating minimal Dockerfile for $service_name..."
+            mkdir -p "./Mach33-Microservices-Platform/$service"
+            cat > "./Mach33-Microservices-Platform/$service/Dockerfile" << EOF
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY *.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
+EOF
+          fi
           
-          # Push the image
-          docker push "gcr.io/$PROJECT_ID/$service_name:$GITHUB_SHA"
+          # Copy the JAR file to the service directory if it exists elsewhere
+          find Mach33-Microservices-Platform -name "${service_name}-*.jar" -not -path "*/target/classes/*" -exec cp {} "./Mach33-Microservices-Platform/$service/" \;
           
-          # Tag as latest
-          docker tag "gcr.io/$PROJECT_ID/$service_name:$GITHUB_SHA" "gcr.io/$PROJECT_ID/$service_name:latest"
-          docker push "gcr.io/$PROJECT_ID/$service_name:latest"
+          # Build the image with explicit tag format
+          echo "Building image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name:latest"
+          docker build -t "gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name:latest" "./Mach33-Microservices-Platform/$service"
+          
+          # Push the image with retries
+          echo "Pushing image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name:latest"
+          for i in {1..3}; do
+            if docker push "gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name:latest"; then
+              echo "✅ Successfully pushed $service_name image"
+              break
+            else
+              echo "⚠️ Push attempt $i failed for $service_name, retrying..."
+              sleep 5
+              if [ $i -eq 3 ]; then
+                echo "❌ Failed to push $service_name after 3 attempts"
+              fi
+            fi
+          done
         done
+        
+        # List the pushed images
+        echo "Listing images in gcr.io/${{ secrets.GCP_PROJECT_ID }}:"
+        gcloud container images list --repository=gcr.io/${{ secrets.GCP_PROJECT_ID }} || echo "Failed to list images"
     
     # Setup and authenticate kubectl
-    - name: Set up kubectl
-      id: get_credentials
-      continue-on-error: true
+    - name: Get GKE credentials
       uses: google-github-actions/get-gke-credentials@v1
       with:
         cluster_name: ${{ env.GKE_CLUSTER }}
         location: ${{ env.GKE_ZONE }}
-        credentials: ${{ secrets.GCP_SA_KEY }}
         project_id: ${{ secrets.GCP_PROJECT_ID }}
-        
-    # Alternative kubectl setup (fallback)
-    - name: Manual kubectl setup (fallback)
-      if: steps.get_credentials.outcome == 'failure'
-      run: |
-        echo "The automated get-gke-credentials action failed. Trying manual setup..."
-        
-        # Ensure gcloud is configured with the correct project
-        gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-        
-        # Get credentials for the cluster manually
-        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} \
-          --zone ${{ env.GKE_ZONE }} \
-          --project ${{ secrets.GCP_PROJECT_ID }}
-          
-        # Verify kubectl is working
-        kubectl config current-context
-        echo "Manual kubectl setup completed"
     
     # Deploy to GKE
     - name: Deploy to GKE
@@ -190,9 +225,9 @@ jobs:
         # Check kubectl connection
         echo "Verifying kubectl connection..."
         kubectl cluster-info || {
-          echo "Error: kubectl is not properly configured. Retrying with explicit credentials..."
-          gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
-          kubectl cluster-info
+          echo "Error: kubectl is not properly configured. Manual check:"
+          kubectl config current-context
+          kubectl config view
         }
         
         # Create K8s namespace if it doesn't exist
@@ -210,6 +245,10 @@ jobs:
         # List kubernetes directory contents for diagnostics
         echo "Checking Kubernetes manifests directory..."
         find Mach33-Microservices-Platform/kubernetes -type f -name "*.yml" -o -name "*.yaml" | sort
+        
+        # Update image references in K8s manifests to use GCR project ID
+        echo "Updating Kubernetes manifests with correct project ID..."
+        sed -i "s|gcr.io/PROJECT_ID|gcr.io/${{ secrets.GCP_PROJECT_ID }}|g" Mach33-Microservices-Platform/kubernetes/*.yaml
         
         # Apply K8s manifests
         echo "Applying Kubernetes manifests..."
