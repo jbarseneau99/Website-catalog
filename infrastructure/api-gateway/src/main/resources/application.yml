@@ -1,85 +1,58 @@
-server:
-  port: ${PORT:8080}
-
 spring:
-  main:
-    web-application-type: reactive
   application:
-    name: API-GATEWAY
+    name: MACH33-API-GATEWAY
   cloud:
     gateway:
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "http://localhost:3000"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders:
-              - Origin
-              - Content-Type
-              - Accept
-              - Authorization
-              - X-Requested-With
-            exposedHeaders:
-              - Access-Control-Allow-Origin
-              - Access-Control-Allow-Credentials
-            allowCredentials: true
-            maxAge: 3600
       discovery:
         locator:
           enabled: true
           lowerCaseServiceId: true
       routes:
-        - id: url-validation
-          uri: lb://URL-VALIDATION
+        - id: eureka-server
+          uri: lb://MACH33-EUREKA-SERVER
           predicates:
-            - Path=/api/url/**
+            - Path=/eureka/**
+          filters:
+            - StripPrefix=1
+        - id: service-discovery-dashboard
+          uri: http://service-discovery:8761
+          predicates:
+            - Path=/dashboard.html, /css/**, /js/**, /api/registry, /api/health, /images/**
+        - id: service-template
+          uri: lb://MACH33-SERVICE-TEMPLATE
+          predicates:
+            - Path=/api/template/**
           filters:
             - StripPrefix=2
-        - id: nlp-service
-          uri: lb://NLP-SERVICE
-          predicates:
-            - Path=/api/nlp/**
-          filters:
-            - StripPrefix=2
-        - id: catalog-processor
-          uri: lb://CATALOG-PROCESSOR
-          predicates:
-            - Path=/api/catalog/**
-          filters:
-            - StripPrefix=2
-        - id: port-manager
-          uri: lb://PORT-MANAGER
-          predicates:
-            - Path=/api/ports/**,/api/ports/actuator/**
-          filters:
-            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: templateCircuitBreaker
+                fallbackUri: forward:/fallback/template
+
+server:
+  port: 8080
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_URL:http://localhost:8761}/eureka/
-    registerWithEureka: true
-    fetchRegistry: true
-    registry-fetch-interval-seconds: 30
+      defaultZone: http://localhost:8761/eureka/
   instance:
     preferIpAddress: true
-    leaseRenewalIntervalInSeconds: 30
-    leaseExpirationDurationInSeconds: 90
-    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    statusPageUrlPath: /actuator/info
-    healthCheckUrlPath: /actuator/health
+    instanceId: ${spring.application.name}:${random.uuid}
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-      base-path: /actuator
   endpoint:
     health:
-      show-details: always 
+      show-details: always
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  level:
+    root: INFO
+    com.mach33: DEBUG
+    org.springframework.cloud.gateway: DEBUG 

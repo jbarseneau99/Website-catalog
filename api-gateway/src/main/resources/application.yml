@@ -1,43 +1,62 @@
-server:
-  port: 8080
-
 spring:
   application:
-    name: api-gateway
+    name: mach33-api-gateway
   cloud:
     gateway:
       discovery:
         locator:
           enabled: true
-          lowerCaseServiceId: true
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "http://localhost:3000"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders:
-              - Origin
-              - Content-Type
-              - Accept
-              - Authorization
-              - X-Requested-With
-            exposedHeaders:
-              - Access-Control-Allow-Origin
-              - Access-Control-Allow-Credentials
-            allowCredentials: true
-            maxAge: 3600
+          lower-case-service-id: true
+      routes:
+        - id: service-discovery-dashboard
+          uri: lb://service-discovery
+          predicates:
+            - Path=/dashboard.html
+          filters:
+            - RedirectTo=302, /eureka/dashboard.html
+        - id: service-discovery
+          uri: lb://service-discovery
+          predicates:
+            - Path=/eureka/**
+          filters:
+            - StripPrefix=1
+        - id: google-search
+          uri: lb://mach33-google-search
+          predicates:
+            - Path=/mach33-google-search/**
+          filters:
+            - RewritePath=/mach33-google-search/(?<remaining>.*), /${remaining}
+        - id: catalog-processor
+          uri: lb://mach33-catalog-processor
+          predicates:
+            - Path=/mach33-catalog-processor/**
+          filters:
+            - RewritePath=/mach33-catalog-processor/(?<remaining>.*), /${remaining}
+        - id: url-validation
+          uri: lb://mach33-url-validation
+          predicates:
+            - Path=/mach33-url-validation/**
+          filters:
+            - RewritePath=/mach33-url-validation/(?<remaining>.*), /${remaining}
+        - id: llm-connection
+          uri: lb://mach33-llm-connection
+          predicates:
+            - Path=/mach33-llm-connection/**
+          filters:
+            - RewritePath=/mach33-llm-connection/(?<remaining>.*), /${remaining}
+        - id: nlp-service
+          uri: lb://mach33-nlp-service
+          predicates:
+            - Path=/mach33-nlp-service/**
+          filters:
+            - RewritePath=/mach33-nlp-service/(?<remaining>.*), /${remaining}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-    registerWithEureka: true
-    fetchRegistry: true
+      defaultZone: http://service-discovery:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
   instance:
     preferIpAddress: true
 
@@ -46,11 +65,9 @@ management:
     web:
       exposure:
         include: "*"
-      cors:
-        allowed-origins: "http://localhost:3000"
-        allowed-methods: GET,POST,PUT,DELETE,OPTIONS
-        allowed-headers: "*"
-        allow-credentials: true
   endpoint:
     health:
-      show-details: always 
+      show-details: always
+
+server:
+  port: 8080 

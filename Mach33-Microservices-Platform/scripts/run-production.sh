@@ -5,7 +5,7 @@ set -e  # Exit immediately if a command exits with a non-zero status
 echo "🚀 Running Mach33 Microservices Platform in production mode..."
 
 # Load environment variables if not already set
-if [ -z "$MONGODB_URI" ] || [ -z "$SPRING_PROFILES_ACTIVE" ]; then
+if [ -z "$MONGODB_URI" ] || [ -z "$SPRING_PROFILES_ACTIVE" ] || [ -z "$GITHUB_TOKEN" ]; then
   if [ -f "$(dirname "$0")/../../mach33-env.sh" ]; then
     echo "🔧 Loading environment from mach33-env.sh..."
     source "$(dirname "$0")/../../mach33-env.sh"
@@ -14,16 +14,50 @@ if [ -z "$MONGODB_URI" ] || [ -z "$SPRING_PROFILES_ACTIVE" ]; then
     echo "   cp mach33-env.sh.template mach33-env.sh"
     echo "   Then edit mach33-env.sh with your settings."
     
-    if [ -z "$MONGODB_URI" ]; then
+if [ -z "$MONGODB_URI" ]; then
       echo "❌ Error: MONGODB_URI environment variable not set."
       echo "You must set this variable for production deployment."
-      exit 1
+        exit 1
+    fi
+    
+    if [ -z "$GITHUB_TOKEN" ] && [ "$1" = "--trigger" ]; then
+      echo "❌ Error: GITHUB_TOKEN environment variable not set."
+      echo "You must set this variable for triggering GitHub deployment."
+      echo "You will be prompted to enter it when needed."
     fi
   fi
 fi
 
 # Set active profile to production
 export SPRING_PROFILES_ACTIVE="prod"
+
+# Ensure GitHub token is exported to child processes
+if [ -n "$GITHUB_TOKEN" ]; then
+  export GITHUB_TOKEN
+  echo "✅ GitHub token is set"
+fi
+
+# Check for deployment target and ensure GCP variables are exported if needed
+if [ "$DEPLOYMENT_TARGET" = "gcp" ]; then
+  echo "🌩️ Target deployment: Google Cloud Platform"
+  
+  # Check for required GCP environment variables
+  if [ -z "$GCP_PROJECT_ID" ]; then
+    echo "⚠️ Warning: GCP_PROJECT_ID is not set in mach33-env.sh"
+    echo "   This is required for GCP deployment"
+    read -p "Enter your GCP Project ID: " GCP_PROJECT_ID
+    export GCP_PROJECT_ID
+fi
+
+  # Export GCP variables to child processes
+  export GCP_PROJECT_ID
+  export GCP_ZONE
+  export GCP_CLUSTER
+  export DEPLOYMENT_TARGET
+else
+  echo "☁️ Target deployment: Default GitHub workflow"
+  export DEPLOYMENT_TARGET="github-default"
+fi
 
 # Check if running in GitHub Actions
 if [ -n "$GITHUB_ACTIONS" ]; then
@@ -37,7 +71,7 @@ fi
 # Check if we should initiate a GitHub deployment
 if [ "$1" = "--trigger" ]; then
   echo "🚀 Triggering GitHub Actions workflow for production deployment..."
-  
+
   # First check if workflow files exist locally
   WORKFLOW_DIR="$(dirname "$0")/../.github/workflows"
   if [ ! -d "$WORKFLOW_DIR" ] || [ -z "$(ls -A "$WORKFLOW_DIR" 2>/dev/null)" ]; then
@@ -60,7 +94,7 @@ if [ "$1" = "--trigger" ]; then
       if [[ "$response" != "y" ]]; then
         echo "Exiting. Please set up workflow files first."
         exit 1
-      fi
+    fi
     fi
   else
     echo "✅ Found workflow files in: $WORKFLOW_DIR"
@@ -77,6 +111,7 @@ if [ "$1" = "--trigger" ]; then
     if [ -n "$GITHUB_TOKEN" ]; then
       echo "✅ Found GitHub token in environment variables."
       export GITHUB_TOKEN
+      echo "Token: ${GITHUB_TOKEN:0:4}...${GITHUB_TOKEN: -4}" # Show first and last 4 chars for verification
     else
       echo "ℹ️ No GITHUB_TOKEN found in environment variables."
       echo "   You will be prompted to enter it."
@@ -95,6 +130,18 @@ if [ "$1" = "--trigger" ]; then
       echo "1. Ensure workflow files exist and are pushed to GitHub"
       echo "2. Verify your GitHub token has 'repo' and 'workflow' permissions"
       echo "3. Check that the MONGODB_URI secret is set in your GitHub repository settings"
+    
+      if [ "$DEPLOYMENT_TARGET" = "gcp" ]; then
+        echo "4. For GCP deployment, ensure these secrets are set in your GitHub repository:"
+        echo "   - GCP_PROJECT_ID: Your Google Cloud project ID"
+        echo "   - GCP_SA_KEY: Service account key with proper permissions"
+        echo ""
+        echo "   You can generate a service account key with these commands:"
+        echo "   gcloud iam service-accounts create github-actions"
+        echo "   gcloud projects add-iam-policy-binding $GCP_PROJECT_ID --member=\"serviceAccount:github-actions@$GCP_PROJECT_ID.iam.gserviceaccount.com\" --role=\"roles/container.admin\""
+        echo "   gcloud projects add-iam-policy-binding $GCP_PROJECT_ID --member=\"serviceAccount:github-actions@$GCP_PROJECT_ID.iam.gserviceaccount.com\" --role=\"roles/storage.admin\""
+        echo "   gcloud iam service-accounts keys create key.json --iam-account=github-actions@$GCP_PROJECT_ID.iam.gserviceaccount.com"
+      fi
     fi
     
     exit $TRIGGER_EXIT_CODE
@@ -142,7 +189,7 @@ if [ "$1" = "--force-local" ]; then
     echo "✅ Services started in Docker containers."
     echo "📊 Eureka Dashboard: http://localhost:8761"
     echo "🌐 API Gateway: http://localhost:8080"
-    
+
     echo ""
     echo "To stop the services, run:"
     echo "docker-compose down"

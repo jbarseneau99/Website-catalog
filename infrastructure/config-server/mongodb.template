@@ -1,6 +1,0 @@
-# MongoDB Configuration
-# Copy this file to ../mongodb.env and update with your credentials
-
-export MONGO_USER=admin
-export MONGO_PASSWORD=password
-export MONGO_CLUSTER=mongodb:27017 

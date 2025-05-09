@@ -132,4 +132,10 @@ package-lock.json
 .env.*.local
 
 # Archive
-archive/ 
+archive/ # GCP service account key - never commit this
+key.json
+
+# Secrets and backups directories
+secrets/
+backups/
+mongodb-secret.yaml

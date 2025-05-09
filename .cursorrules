@@ -3,35 +3,35 @@ build:
   - command: ./build.sh
   - watch:
     # Backend Services
-    - services/**/*.java
-    - common/**/*.java
-    - api-gateway/**/*.java
-    - service-discovery/**/*.java
+    - Mach33-Microservices-Platform/services/**/*.java
+    - Mach33-Microservices-Platform/common/**/*.java
+    - Mach33-Microservices-Platform/infrastructure/api-gateway/**/*.java
+    - Mach33-Microservices-Platform/infrastructure/service-discovery/**/*.java
     # UI Changes
-    - ui/src/**/*.{ts,tsx,js,jsx,css,scss}
-    - ui/public/**/*
+    - Mach33-Microservices-Platform/ui/src/**/*.{ts,tsx,js,jsx,css,scss}
+    - Mach33-Microservices-Platform/ui/public/**/*
     # Configuration
-    - config/**/*.template
-    - **/application.{yml,properties}
+    - Mach33-Microservices-Platform/config/**/*.template
+    - Mach33-Microservices-Platform/**/application.{yml,properties}
     # Docker
-    - **/Dockerfile
-    - docker-compose.yml
+    - Mach33-Microservices-Platform/**/Dockerfile
+    - Mach33-Microservices-Platform/docker/docker-compose.yml
   - pre_build:
-    - command: ./stop-all.sh
+    - command: ./Mach33-Microservices-Platform/scripts/stop-all.sh
     - env:
       - JAVA_HOME=/opt/homebrew/Cellar/openjdk@17/17.0.15/libexec/openjdk.jdk/Contents/Home
       - PATH=$JAVA_HOME/bin:$PATH
   - post_build:
-    - command: ./run-system.sh
+    - command: ./Mach33-Microservices-Platform/scripts/start-services.sh
 
 # Development Servers
 dev:
   # UI Development
   ui:
-    - command: cd ui && npm run dev
+    - command: cd Mach33-Microservices-Platform/ui && npm run dev
     - watch:
-      - ui/src/**/*
-      - ui/public/**/*
+      - Mach33-Microservices-Platform/ui/src/**/*
+      - Mach33-Microservices-Platform/ui/public/**/*
     - pre_command: pkill -f "node.*npm" || true
     - env:
       - NODE_ENV=development
@@ -39,79 +39,63 @@ dev:
 
   # Backend Services
   services:
-    - command: ./run-system.sh
+    - command: ./Mach33-Microservices-Platform/scripts/start-services.sh
     - watch:
-      - services/**/*.java
-      - common/**/*.java
-      - api-gateway/**/*.java
-      - service-discovery/**/*.java
-    - pre_command: ./stop-all.sh
+      - Mach33-Microservices-Platform/services/**/*.java
+      - Mach33-Microservices-Platform/common/**/*.java
+      - Mach33-Microservices-Platform/infrastructure/api-gateway/**/*.java
+      - Mach33-Microservices-Platform/infrastructure/service-discovery/**/*.java
+    - pre_command: ./Mach33-Microservices-Platform/scripts/stop-all.sh
     - env:
-      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_PROFILES_ACTIVE=development
       - MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
 
 # Environment Configuration
 environments:
-  dev:
+  development:
     - env:
-      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_PROFILES_ACTIVE=development
       - MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog
-      - PORT_MANAGER_URL=http://localhost:8090
   staging:
     - env:
       - SPRING_PROFILES_ACTIVE=staging
       - MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog-staging
-      - PORT_MANAGER_URL=http://port-manager:8090
   production:
     - env:
-      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_PROFILES_ACTIVE=production
       - MONGODB_URI=mongodb+srv://jbarseneau:Cheech99@cluster0.rd3fpku.mongodb.net/website-catalog-prod
-      - PORT_MANAGER_URL=http://port-manager:8090
 
 # Service Configuration
 services:
-  port-manager:
-    - port: 8090  # Fixed port for Port Manager
-    - dynamic_port_range: 8081-8999
-    - excluded_ports: [8761]  # Eureka Server fixed port
-  
-  eureka:
+  eureka-server:
     - port: 8761  # Fixed port for Eureka
+    - name: MACH33-EUREKA-SERVER
 
-  url-validation:
-    - dynamic_port: true
-    - port_range: 8081-8089
+  api-gateway:
+    - port: 8080  # Fixed port for API Gateway
+    - name: MACH33-API-GATEWAY
 
-  nlp-service:
+  service-template:
     - dynamic_port: true
-    - port_range: 8081-8089
-
-  catalog-processor:
-    - dynamic_port: true
-    - port_range: 8081-8089
+    - port_range: 8090-8110
+    - name: MACH33-${service.name}
 
 # Process Management
 processes:
   - patterns:
-    - "java -jar.*eureka-server"
-    - "java -jar.*api-gateway"
-    - "java -jar.*nlp-service"
-    - "java -jar.*catalog-processor"
-    - "java -jar.*url-validation"
-    - "java -jar.*port-manager"
+    - "java -jar.*MACH33-EUREKA-SERVER"
+    - "java -jar.*MACH33-API-GATEWAY"
+    - "java -jar.*MACH33-.*"
     - "node.*npm"
   - cleanup:
     command: |
-      pkill -f "java -jar.*" || true
+      pkill -f "java -jar.*MACH33-" || true
       pkill -f "node.*npm" || true
-      docker-compose down || true
+      docker-compose -f Mach33-Microservices-Platform/docker/docker-compose.yml down || true
   - startup_order:
     - eureka-server
-    - port-manager
-    - url-validation
-    - nlp-service
-    - catalog-processor
-    - ui
+    - api-gateway
+    - services
 
 # Database Configuration
 db:
@@ -121,34 +105,33 @@ db:
     - retryWrites=true
     - w=majority
   databases:
-    dev: website-catalog
+    development: website-catalog
     staging: website-catalog-staging
-    prod: website-catalog-prod
+    production: website-catalog-prod
 
 # Test Configuration
 test:
   unit:
-    - command: mvn test
+    - command: cd Mach33-Microservices-Platform && mvn test
     - watch:
-      - services/**/test/**/*.java
-      - common/**/test/**/*.java
-      - ui/src/**/*.test.{ts,tsx,js,jsx}
+      - Mach33-Microservices-Platform/services/**/test/**/*.java
+      - Mach33-Microservices-Platform/common/**/test/**/*.java
+      - Mach33-Microservices-Platform/ui/src/**/*.test.{ts,tsx,js,jsx}
   
   integration:
-    - command: mvn verify -P integration-test
+    - command: cd Mach33-Microservices-Platform && mvn verify -P integration-test
     - watch:
-      - services/**/it/**/*.java
-      - services/**/integration/**/*.java
+      - Mach33-Microservices-Platform/services/**/it/**/*.java
+      - Mach33-Microservices-Platform/services/**/integration/**/*.java
 
 # Docker Rules
 docker:
-  - command: docker-compose up --build
-  - pre_command: docker-compose down
+  - command: docker-compose -f Mach33-Microservices-Platform/docker/docker-compose.yml up --build
+  - pre_command: docker-compose -f Mach33-Microservices-Platform/docker/docker-compose.yml down
   - files:
-    - docker-compose.yml
-    - services/*/Dockerfile
-    - api-gateway/Dockerfile
-    - service-discovery/Dockerfile
+    - Mach33-Microservices-Platform/docker/docker-compose.yml
+    - Mach33-Microservices-Platform/services/*/Dockerfile
+    - Mach33-Microservices-Platform/infrastructure/*/Dockerfile
   - env:
     - DOCKER_BUILDKIT=1
     - COMPOSE_DOCKER_CLI_BUILD=1
@@ -157,8 +140,8 @@ docker:
 ignore:
   # Build outputs
   - **/target/
-  - ui/build/
-  - ui/dist/
+  - Mach33-Microservices-Platform/ui/build/
+  - Mach33-Microservices-Platform/ui/dist/
   - **/node_modules/
   
   # IDE and OS files
@@ -174,16 +157,19 @@ ignore:
   # Environment files
   - **/.env
   - **/mongodb.env
-  - services/*/.env
+  - Mach33-Microservices-Platform/services/*/.env
   
   # Git
   - **/.git/
   - **/.gitignore
+  
+  # Archive
+  - archive/**/*
 
 # Never Ignore
 !ignore:
   # Templates and configs
-  - config/**/*.template
+  - Mach33-Microservices-Platform/config/**/*.template
   - **/application.yml
   - **/application.properties
   - tsconfig.json
@@ -192,7 +178,7 @@ ignore:
   
   # Documentation
   - **/*.md
-  - docs/**/*
+  - Mach33-Microservices-Platform/docs/**/*
 
 # Empirical Analysis Methodology
 
@@ -201,36 +187,37 @@ ignore:
 ### Process Verification
 Must use system commands to verify actual state:
 ```bash
-ps aux | grep <process>  # Verify PIDs (e.g., 26545, 26671, 26708)
-lsof -i :<port>         # Verify ports (8761, 8090, 8081)
+ps aux | grep "MACH33-"  # Verify PIDs
+lsof -i :8761  # Verify Eureka Server
+lsof -i :8080  # Verify API Gateway
+lsof -i :809   # Verify Service Ports (8090-8110)
 netstat -an | grep LISTEN  # Verify listening sockets
 ```
 
 ### Service Health Verification
 Must perform direct HTTP calls:
 ```bash
-curl -v http://localhost:8761/actuator/health
-curl -v http://localhost:8090/actuator/health
-curl -v http://localhost:8081/actuator/health
+curl -v http://localhost:8761/actuator/health  # Eureka Server
+curl -v http://localhost:8080/actuator/health  # API Gateway
+curl -v http://localhost:${PORT}/actuator/health  # Services
 ```
 
 ## 2. Evidence Analysis Requirements
 
 ### Log Analysis (Secondary Evidence Only)
-Example from our actual logs:
+Example log format:
 ```
-2025-05-05 22:11:50.992 DEBUG 26545 --- [nio-8761-exec-8] o.s.web.servlet.DispatcherServlet : GET "/actuator/health"
-2025-05-05 22:11:50.996 DEBUG 26545 --- [nio-8761-exec-8] o.s.web.servlet.DispatcherServlet : Completed 200 OK
+2025-05-05 22:11:50.992 DEBUG [MACH33-EUREKA-SERVER] --- [nio-8761-exec-8] : Health check passed
 ```
 - Logs alone are NOT sufficient evidence
 - Must correlate with system-level verification
 - Must verify timestamps are current
 
 ### Error Analysis
-Example from our actual errors:
+Example error format:
 ```
-Error: Unable to access jarfile service-discovery/target/eureka-server.jar
-[1]  + exit 1     java -jar service-discovery/target/eureka-server.jar
+Error: Unable to access jarfile Mach33-Microservices-Platform/infrastructure/service-discovery/target/service-discovery.jar
+[1]  + exit 1     java -jar service-discovery.jar
 ```
 Must verify:
 - Error source (PID, timestamp)
@@ -248,8 +235,6 @@ Must verify:
 ### Secondary Evidence (Supporting Only)
 - Log entries
 - Error messages
-- Configuration files
-- Health check responses
 
 ## 4. Time-Series Requirements
 
