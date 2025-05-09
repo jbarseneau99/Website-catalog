@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mach33
+  labels:
+    name: mach33
+    environment: production 
