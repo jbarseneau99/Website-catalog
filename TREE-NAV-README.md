@@ -1,76 +1,112 @@
 # Mach33 Admin UI Tree Navigation
 
-This README explains how to implement and fix the three-tier tree navigation for the Mach33 Admin UI.
+This README explains the enhanced three-tier tree navigation for the Mach33 Admin UI.
 
 ## Files
 
 - `adminHierarchy.json` - Defines the menu structure
 - `tree-nav.css` - CSS styles for the navigation
 - `tree-navigation.js` - JavaScript for navigation interactions
+- `tree-nav.html` - HTML structure for the navigation (deployed via ConfigMap)
+- `enhance-tree-nav.sh` - Script to deploy the enhanced three-tier navigation
 - `fix-admin-ui-path.sh` - Script to fix path issues with the navigation
 
-## Issues Fixed
+## Navigation Structure
 
-1. **Path Issues**: The original deployment had incorrect paths for CSS and JS files. We fixed this by changing:
-   - `/tree-nav/tree-nav.css` -> `tree-nav/tree-nav.css` (removed leading slash)
-   - `/tree-nav/tree-navigation.js` -> `tree-nav/tree-navigation.js` (removed leading slash)
+The tree navigation now supports a three-tier structure:
+1. **Top-level menu items** - Main categories (Dashboard, Agent Ecosystem, etc.)
+2. **Submenu items** - Second-level categories under each main category
+3. **Third-level items** - Specific pages or features under each subcategory
 
-2. **Namespace Issues**: The original script used the wrong namespace. We updated it to use `mach33` instead of `mach33-system`.
+## Deployment
 
-3. **HTML Structure Issues**: We added proper HTML structure with the `tree-navigation-container` div inside the proper navigation menu.
+### Production Deployment (Recommended)
 
-4. **GitHub Actions**: Added a workflow file that will automatically deploy the navigation when key files change.
+All production deployments should go through GitHub Actions:
 
-## Deployment Environments
+1. Make changes to the navigation files:
+   - Edit `tree-nav.css` for styling changes
+   - Edit `tree-navigation.js` for behavior changes
+   - Edit `enhance-tree-nav.sh` for HTML structure changes
 
-The solution works in all three required environments:
+2. Commit and push changes to GitHub:
+   ```bash
+   git add tree-nav.css tree-navigation.js enhance-tree-nav.sh
+   git commit -m "Update tree navigation"
+   git push origin main
+   ```
 
-1. **Local Environment**: Using JAR files with Atlas Hosted DB
-   - Run the test-tree-nav-local.sh script for local development and testing
-   - The navigation files are accessible via a local HTTP server
+3. GitHub Actions will automatically deploy the changes to production when changes are pushed to these files.
 
-2. **Staging Environment**: Using Docker with Atlas Hosted DB
-   - For testing in a Docker environment before production deployment
-   - Use test-tree-nav-local.sh with the Docker flag: `./test-tree-nav-local.sh docker`
+### Staging/Local Deployment
 
-3. **Production Environment**: Using GitHub with Atlas Hosted DB
-   - **IMPORTANT**: ALL production deployments MUST go through GitHub Actions
-   - Direct kubectl commands or manual scripts SHOULD NOT be used for production
-   - The workflow is triggered automatically when navigation files are modified
-   - Can be manually triggered via the GitHub Actions interface if needed
-
-## GitHub Workflow
-
-Our GitHub workflow (.github/workflows/tree-nav-deploy.yml) ensures:
-
-1. Consistent deployments with proper validation
-2. Automatic triggering when relevant files change
-3. Full audit trail of all deployments
-4. Verification of successful deployment
-
-To manually trigger a deployment from GitHub:
-1. Go to the repository on GitHub
-2. Click on "Actions"
-3. Select "Deploy Tree Navigation" workflow
-4. Click "Run workflow"
-5. Select the branch and click "Run workflow"
-
-## Local Testing
-
-To test the navigation locally without Kubernetes:
+For testing in local or staging environments, use the `enhance-tree-nav.sh` script:
 
 ```bash
-./test-tree-nav-local.sh
+./enhance-tree-nav.sh
 ```
 
-This will start a local web server where you can test the navigation in your browser.
+## Technical Implementation
+
+### ConfigMap Approach
+
+The navigation is deployed as a ConfigMap in Kubernetes:
+
+1. ConfigMap `admin-ui-tree-nav` contains:
+   - `tree-nav.html` - The HTML structure for the navigation
+   - `tree-nav.css` - CSS styles for the navigation
+   - `tree-navigation.js` - JavaScript for interactivity
+
+2. The files in the ConfigMap are mounted as volumes in the admin-service pod at:
+   - `/app/public/tree-nav/`
+
+3. Nginx is configured to serve these files at:
+   - `/admin/tree-nav/`
+
+### CSS Details
+
+- Uses nested CSS selectors for three-tier depth
+- Implements collapsible sections with CSS transitions
+- Provides visual cues for active items
+- Adds Mach33 theme colors and styling
+
+### JavaScript Details
+
+- Handles opening/closing of menu sections
+- Maintains state in URL hash for navigation
+- Adds production environment badge
+- Loads content based on selected menu item
 
 ## Troubleshooting
 
-If the navigation doesn't appear:
+If the navigation is not appearing or is broken:
 
-1. Check browser console for errors
-2. Verify the ConfigMaps exist: `kubectl get configmap -n mach33 | grep tree-nav`
-3. Check the admin-service pod logs: `kubectl logs -n mach33 deployment/admin-service`
-4. Try clearing your browser cache
-5. Trigger a new deployment via GitHub Actions 
+1. Check the ConfigMap exists:
+   ```bash
+   kubectl get configmap admin-ui-tree-nav -n mach33
+   ```
+
+2. Check the admin-service pod is running:
+   ```bash
+   kubectl get pods -n mach33 -l app=admin-service
+   ```
+
+3. Check Nginx configuration:
+   ```bash
+   kubectl exec -it $(kubectl get pods -n mach33 -l app=admin-service -o jsonpath='{.items[0].metadata.name}') -n mach33 -- cat /etc/nginx/conf.d/default.conf
+   ```
+
+4. Check file paths:
+   ```bash
+   kubectl exec -it $(kubectl get pods -n mach33 -l app=admin-service -o jsonpath='{.items[0].metadata.name}') -n mach33 -- ls -la /app/public/tree-nav/
+   ```
+
+5. Inspect browser console for JavaScript errors
+
+## Further Enhancements
+
+Future improvements could include:
+- Dynamic loading of menu items from a database or API
+- User-specific menu customization
+- Permission-based menu visibility
+- Collapsible sidebar for mobile responsiveness 
