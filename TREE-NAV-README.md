@@ -10,6 +10,7 @@ This README explains the enhanced three-tier tree navigation for the Mach33 Admi
 - `tree-nav.html` - HTML structure for the navigation (deployed via ConfigMap)
 - `enhance-tree-nav.sh` - Script to deploy the enhanced three-tier navigation
 - `fix-admin-ui-path.sh` - Script to fix path issues with the navigation
+- `fix-path-issue.sh` - Script to fix HTML path issues for tree navigation assets
 
 ## Navigation Structure
 
@@ -40,10 +41,14 @@ All production deployments should go through GitHub Actions:
 
 ### Staging/Local Deployment
 
-For testing in local or staging environments, use the `enhance-tree-nav.sh` script:
+For testing in local or staging environments, use the following scripts:
 
 ```bash
+# Deploy the navigation
 ./enhance-tree-nav.sh
+
+# Fix HTML paths (if needed)
+./fix-path-issue.sh
 ```
 
 ## Technical Implementation
@@ -62,6 +67,25 @@ The navigation is deployed as a ConfigMap in Kubernetes:
 
 3. Nginx is configured to serve these files at:
    - `/admin/tree-nav/`
+
+4. ConfigMap `admin-service-html-fixed` contains:
+   - `fixed-index.html` - HTML that loads the tree navigation with correct paths
+
+### Path Configuration
+
+Correct path structure is crucial:
+
+1. HTML references in the admin UI:
+   - CSS path: `/admin/tree-nav/tree-nav.css`  
+   - JS path: `/admin/tree-nav/tree-navigation.js`
+   - HTML fetch: `/admin/tree-nav/tree-nav.html`
+
+2. Nginx location block:
+   ```
+   location ~ ^/admin/tree-nav/(.*)$ {
+       alias /app/public/tree-nav/$1;
+   }
+   ```
 
 ### CSS Details
 
@@ -101,7 +125,36 @@ If the navigation is not appearing or is broken:
    kubectl exec -it $(kubectl get pods -n mach33 -l app=admin-service -o jsonpath='{.items[0].metadata.name}') -n mach33 -- ls -la /app/public/tree-nav/
    ```
 
-5. Inspect browser console for JavaScript errors
+5. Check HTML file for correct paths:
+   ```bash
+   kubectl exec -it $(kubectl get pods -n mach33 -l app=admin-service -o jsonpath='{.items[0].metadata.name}') -n mach33 -- cat /usr/share/nginx/html/index.html | grep -A 2 -B 2 tree-nav
+   ```
+
+6. Test URL endpoints:
+   ```bash
+   # Check if CSS is accessible
+   curl -sI http://35.226.118.214/admin/tree-nav/tree-nav.css | head -2
+   
+   # Check if JS is accessible
+   curl -sI http://35.226.118.214/admin/tree-nav/tree-navigation.js | head -2
+   
+   # Check if HTML is accessible
+   curl -sI http://35.226.118.214/admin/tree-nav/tree-nav.html | head -2
+   ```
+
+7. If path issues are detected, run the fix-path-issue.sh script:
+   ```bash
+   ./fix-path-issue.sh
+   ```
+
+8. Inspect browser console for JavaScript errors
+
+## Common Path Issues
+
+1. **Missing leading slashes**: URLs should be `/admin/tree-nav/...` not `admin/tree-nav/...`
+2. **Double slashes**: Avoid `//admin/tree-nav/...`
+3. **Incorrect paths in HTML**: The admin UI HTML must reference the correct paths
+4. **Nginx configuration**: Location block should properly map `/admin/tree-nav/` to `/app/public/tree-nav/`
 
 ## Further Enhancements
 
