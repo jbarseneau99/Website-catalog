@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.de588ddf.css",
+    "main.js": "/static/js/main.ea588cbb.js",
+    "static/media/33fg_Logo-black.png": "/static/media/33fg_Logo-black.8bec8005b667910eb370.png",
+    "index.html": "/index.html",
+    "main.de588ddf.css.map": "/static/css/main.de588ddf.css.map",
+    "main.ea588cbb.js.map": "/static/js/main.ea588cbb.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.de588ddf.css",
+    "static/js/main.ea588cbb.js"
+  ]
+}

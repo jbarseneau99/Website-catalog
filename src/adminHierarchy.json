@@ -1,0 +1,269 @@
+{
+  "name": "Mach33 Fund Accounting Admin UI",
+  "children": [
+    {
+      "name": "Dashboard",
+      "children": []
+    },
+    {
+      "name": "Agent Ecosystem",
+      "children": [
+        {
+          "name": "Agent Health Monitor",
+          "children": [
+            {"name": "Status Dashboard", "children": []},
+            {"name": "Performance Metrics", "children": []},
+            {"name": "Communication Patterns", "children": []},
+            {"name": "Resource Utilization", "children": []},
+            {"name": "Error Rates", "children": []},
+            {"name": "Response Time Tracking", "children": []}
+          ]
+        },
+        {
+          "name": "Agent Behavior Control",
+          "children": [
+            {"name": "Policy Management", "children": []},
+            {"name": "Decision Controls", "children": []},
+            {"name": "Self-healing Rules", "children": []},
+            {"name": "Behavioral Boundaries", "children": []},
+            {"name": "Context Adaptation Settings", "children": []},
+            {"name": "Safety Protocols", "children": []}
+          ]
+        },
+        {
+          "name": "Agent Lifecycle Management",
+          "children": [
+            {"name": "Deployment Controls", "children": []},
+            {"name": "Version Management", "children": []},
+            {"name": "Configuration History", "children": []},
+            {"name": "Capability Registry", "children": []},
+            {"name": "Retirement Planning", "children": []}
+          ]
+        },
+        {
+          "name": "Agent Collaboration",
+          "children": [
+            {"name": "Interaction Mapping", "children": []},
+            {"name": "Dependency Tracking", "children": []},
+            {"name": "Collective Intelligence Analysis", "children": []},
+            {"name": "Communication Protocols", "children": []},
+            {"name": "Task Distribution", "children": []},
+            {"name": "Conflict Resolution", "children": []}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Language Intelligence",
+      "children": [
+        {
+          "name": "Internal LLM Management",
+          "children": [
+            {"name": "Model Deployment Status", "children": []},
+            {"name": "Inference Performance", "children": []},
+            {"name": "Version Control", "children": []},
+            {"name": "Parameter Management", "children": []},
+            {"name": "Quantization Control", "children": []},
+            {"name": "Weight Updates", "children": []},
+            {"name": "Distribution Settings", "children": []}
+          ]
+        },
+        {
+          "name": "Dynamic Language Models",
+          "children": [
+            {"name": "Adaptation Controls", "children": []},
+            {"name": "Context Management", "children": []},
+            {"name": "Specialization Settings", "children": []},
+            {"name": "Domain-Specific Tuning", "children": []},
+            {"name": "Fine-tuning Operations", "children": []},
+            {"name": "Contextual Knowledge Integration", "children": []}
+          ]
+        },
+        {
+          "name": "Prompt Engineering Hub",
+          "children": [
+            {"name": "Template Management", "children": []},
+            {"name": "Prompt Testing", "children": []},
+            {"name": "Version Control", "children": []},
+            {"name": "Performance Analytics", "children": []},
+            {"name": "Context Window Optimization", "children": []},
+            {"name": "Pattern Library", "children": []}
+          ]
+        },
+        {
+          "name": "Natural Language Operations",
+          "children": [
+            {"name": "NLP Pipeline Monitor", "children": []},
+            {"name": "Language Processing Metrics", "children": []},
+            {"name": "Linguistic Quality Analysis", "children": []},
+            {"name": "Multilingual Support", "children": []},
+            {"name": "Semantic Accuracy", "children": []},
+            {"name": "Entity Recognition Performance", "children": []},
+            {"name": "Intent Classification Health", "children": []}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Knowledge Management",
+      "children": [
+        {
+          "name": "Knowledge Graph",
+          "children": [
+            {"name": "Ontology Viewer", "children": []},
+            {"name": "Entity Explorer", "children": []},
+            {"name": "Relation Browser", "children": []},
+            {"name": "Graph Visualization", "children": []},
+            {"name": "Query Workbench", "children": []},
+            {"name": "Path Analysis", "children": []},
+            {"name": "Impact Assessment", "children": []}
+          ]
+        },
+        {
+          "name": "Knowledge Engineering",
+          "children": [
+            {"name": "Schema Editor", "children": []},
+            {"name": "Validation Tools", "children": []},
+            {"name": "Version Control", "children": []},
+            {"name": "Knowledge Ingestion Pipelines", "children": []},
+            {"name": "Extraction Rules Management", "children": []},
+            {"name": "Transformation Workflows", "children": []},
+            {"name": "Quality Assurance", "children": []}
+          ]
+        },
+        {
+          "name": "Semantic Substrate",
+          "children": [
+            {"name": "Foundational Concepts", "children": []},
+            {"name": "Cross-domain Linkages", "children": []},
+            {"name": "Semantic Consistency", "children": []},
+            {"name": "Core Ontology Management", "children": []},
+            {"name": "Upper Ontology Integration", "children": []},
+            {"name": "Logical Ruleset", "children": []}
+          ]
+        },
+        {
+          "name": "Knowledge Analytics",
+          "children": [
+            {"name": "Coverage Analysis", "children": []},
+            {"name": "Coherence Metrics", "children": []},
+            {"name": "Utilization Patterns", "children": []},
+            {"name": "Knowledge Gaps Identification", "children": []},
+            {"name": "Confidence Scoring", "children": []},
+            {"name": "Evidentiary Support", "children": []}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Integration Hub",
+      "children": [
+        {
+          "name": "External Services",
+          "children": [
+            {"name": "API Gateway Management", "children": []},
+            {"name": "External Endpoint Registry", "children": []},
+            {"name": "Integration Health", "children": []},
+            {"name": "Rate Limiting", "children": []},
+            {"name": "Version Compatibility", "children": []},
+            {"name": "Schema Validation", "children": []},
+            {"name": "Documentation Browser", "children": []}
+          ]
+        },
+        {
+          "name": "Data Exchange",
+          "children": [
+            {"name": "Message Transformation", "children": []},
+            {"name": "Protocol Adaptation", "children": []},
+            {"name": "Event Streaming", "children": []},
+            {"name": "Batch Processing", "children": []},
+            {"name": "Format Conversion", "children": []},
+            {"name": "Data Mapping Rules", "children": []},
+            {"name": "Validation Policies", "children": []}
+          ]
+        },
+        {
+          "name": "Authentication & Access",
+          "children": [
+            {"name": "Identity Management", "children": []},
+            {"name": "Credential Store", "children": []},
+            {"name": "Permission Controls", "children": []},
+            {"name": "OAuth Configuration", "children": []},
+            {"name": "API Key Management", "children": []},
+            {"name": "Access Auditing", "children": []},
+            {"name": "Federation Settings", "children": []}
+          ]
+        },
+        {
+          "name": "Integration Workflows",
+          "children": [
+            {"name": "Process Designer", "children": []},
+            {"name": "Workflow Status", "children": []},
+            {"name": "Execution History", "children": []},
+            {"name": "Error Handling Rules", "children": []},
+            {"name": "Trigger Management", "children": []},
+            {"name": "Callback Registry", "children": []},
+            {"name": "SLA Monitoring", "children": []}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Infrastructure",
+      "children": [
+        {
+          "name": "Microservices Platform",
+          "children": [
+            {"name": "Service Registry", "children": []},
+            {"name": "Container Orchestration", "children": []},
+            {"name": "Service Mesh Control", "children": []},
+            {"name": "Discovery Management", "children": []},
+            {"name": "Circuit Breaker Configuration", "children": []},
+            {"name": "Sidecar Status", "children": []},
+            {"name": "Resilience Policies", "children": []},
+            {"name": "Service Lifecycle", "children": []}
+          ]
+        },
+        {
+          "name": "Cloud Distribution",
+          "children": [
+            {"name": "Multi-region Management", "children": []},
+            {"name": "Load Balancing", "children": []},
+            {"name": "Geo-redundancy", "children": []},
+            {"name": "Edge Distribution", "children": []},
+            {"name": "Cost Optimization", "children": []},
+            {"name": "Resource Allocation", "children": []},
+            {"name": "Capacity Planning", "children": []}
+          ]
+        },
+        {
+          "name": "Data Infrastructure",
+          "children": [
+            {"name": "Vector Database Status", "children": []},
+            {"name": "Relational Database Management", "children": []},
+            {"name": "Embedding Storage", "children": []},
+            {"name": "Cache Services", "children": []},
+            {"name": "Data Replication", "children": []},
+            {"name": "Backup & Recovery", "children": []},
+            {"name": "Sharding Configuration", "children": []},
+            {"name": "Storage Optimization", "children": []}
+          ]
+        },
+        {
+          "name": "Operational Needs",
+          "children": [
+            {"name": "Deployment Pipeline", "children": []},
+            {"name": "Monitoring & Alerting", "children": []},
+            {"name": "Scaling Controls", "children": []},
+            {"name": "Health Checks", "children": []},
+            {"name": "Logging Management", "children": []},
+            {"name": "Incident Response", "children": []},
+            {"name": "Change Management", "children": []},
+            {"name": "Configuration Control", "children": []},
+            {"name": "Security Posture", "children": []}
+          ]
+        }
+      ]
+    }
+  ]
+} 

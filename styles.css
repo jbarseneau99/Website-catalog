@@ -1,0 +1,79 @@
+/* Reset and global styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #333;
+  line-height: 1.5;
+  background-color: #f8f9fa;
+}
+
+/* Admin theme colors */
+:root {
+  --primary-color: #0052cc;
+  --secondary-color: #6554c0;
+  --success-color: #36b37e;
+  --warning-color: #ffab00;
+  --danger-color: #ff5630;
+  --light-bg: #f8f9fa;
+  --border-color: #e9ecef;
+  --text-dark: #343a40;
+  --text-light: #6c757d;
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.p-3 {
+  padding: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-navigation {
+    width: 220px;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-navigation {
+    width: 180px;
+  }
+  
+  .admin-header h1 {
+    font-size: 18px;
+  }
+} 
