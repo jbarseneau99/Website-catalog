@@ -1,0 +1,53 @@
+name: Deploy Tree Navigation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'adminHierarchy.json'
+      - 'tree-nav.css'
+      - 'tree-navigation.js'
+      - 'tree-nav/**'
+      - 'fix-admin-ui-path.sh'
+      - '.github/workflows/tree-nav-deploy.yml'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      
+    - name: Configure kubectl
+      uses: azure/k8s-set-context@v1
+      with:
+        method: kubeconfig
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+        
+    - name: Install jq
+      run: sudo apt-get install -y jq
+      
+    - name: Deploy tree navigation
+      run: |
+        chmod +x fix-admin-ui-path.sh
+        ./fix-admin-ui-path.sh
+      env:
+        NAMESPACE: mach33
+
+    - name: Verify deployment
+      run: |
+        echo "Tree navigation deployment completed"
+        kubectl get configmap -n mach33 | grep tree-nav
+        kubectl rollout status deployment admin-service -n mach33
+        
+    - name: Post-deployment notification
+      if: success()
+      run: |
+        echo "Tree navigation successfully deployed to production via GitHub Actions"
+        echo "Timestamp: $(date)"
+        # Add Slack or email notification here if needed 
