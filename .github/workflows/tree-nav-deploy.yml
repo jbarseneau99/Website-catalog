@@ -10,6 +10,7 @@ on:
       - 'tree-nav/**'
       - 'fix-admin-ui-path.sh'
       - 'enhance-tree-nav.sh'
+      - 'fix-path-issue.sh'
       - '.github/workflows/tree-nav-deploy.yml'
   workflow_dispatch:  # Allow manual triggering
 
@@ -35,13 +36,17 @@ jobs:
       
     - name: Deploy enhanced tree navigation
       run: |
-        # Make script executable
+        # Make scripts executable
         chmod +x ./enhance-tree-nav.sh
+        chmod +x ./fix-path-issue.sh
         
         # Run the enhanced tree navigation script
         ./enhance-tree-nav.sh
         
-        echo "Tree navigation deployment completed"
+        # Fix HTML path issues
+        ./fix-path-issue.sh
+        
+        echo "Tree navigation deployment and path fix completed"
         
     - name: Verify deployment
       run: |
@@ -52,6 +57,14 @@ jobs:
           echo "✅ ConfigMap admin-ui-tree-nav exists"
         else
           echo "❌ ConfigMap admin-ui-tree-nav does not exist"
+          exit 1
+        fi
+        
+        # Check if the fixed HTML ConfigMap exists
+        if kubectl get configmap admin-service-html-fixed -n mach33 &> /dev/null; then
+          echo "✅ ConfigMap admin-service-html-fixed exists"
+        else
+          echo "❌ ConfigMap admin-service-html-fixed does not exist"
           exit 1
         fi
         
@@ -72,8 +85,30 @@ jobs:
           exit 1
         fi
         
+        # Test URL endpoints
+        echo "Testing navigation file endpoints..."
+        
+        # Function to test URL
+        test_url() {
+          local url="$1"
+          local status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+          if [[ "$status" == "200" ]]; then
+            echo "✅ $url is accessible (status: $status)"
+            return 0
+          else
+            echo "❌ $url returned status: $status"
+            return 1
+          fi
+        }
+        
+        # Test critical endpoints
+        test_url "http://35.226.118.214/admin/" || exit 1
+        test_url "http://35.226.118.214/admin/tree-nav/tree-nav.css" || exit 1
+        test_url "http://35.226.118.214/admin/tree-nav/tree-navigation.js" || exit 1
+        test_url "http://35.226.118.214/admin/tree-nav/tree-nav.html" || exit 1
+        
         echo "Verification completed successfully"
-        echo "The enhanced tree navigation has been deployed to production"
+        echo "The enhanced tree navigation has been deployed to production with correct paths"
 
     - name: Post-deployment notification
       if: success()
