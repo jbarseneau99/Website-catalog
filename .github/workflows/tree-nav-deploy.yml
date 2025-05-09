@@ -9,6 +9,7 @@ on:
       - 'tree-navigation.js'
       - 'tree-nav/**'
       - 'fix-admin-ui-path.sh'
+      - 'enhance-tree-nav.sh'
       - '.github/workflows/tree-nav-deploy.yml'
   workflow_dispatch:  # Allow manual triggering
 
@@ -32,19 +33,48 @@ jobs:
     - name: Install jq
       run: sudo apt-get install -y jq
       
-    - name: Deploy tree navigation
+    - name: Deploy enhanced tree navigation
       run: |
-        chmod +x fix-admin-ui-path.sh
-        ./fix-admin-ui-path.sh
-      env:
-        NAMESPACE: mach33
-
+        # Make script executable
+        chmod +x ./enhance-tree-nav.sh
+        
+        # Run the enhanced tree navigation script
+        ./enhance-tree-nav.sh
+        
+        echo "Tree navigation deployment completed"
+        
     - name: Verify deployment
       run: |
-        echo "Tree navigation deployment completed"
-        kubectl get configmap -n mach33 | grep tree-nav
-        kubectl rollout status deployment admin-service -n mach33
+        echo "Verifying deployment..."
         
+        # Check if the ConfigMap exists
+        if kubectl get configmap admin-ui-tree-nav -n mach33 &> /dev/null; then
+          echo "✅ ConfigMap admin-ui-tree-nav exists"
+        else
+          echo "❌ ConfigMap admin-ui-tree-nav does not exist"
+          exit 1
+        fi
+        
+        # Check if admin-service pod is running
+        ADMIN_POD=$(kubectl get pods -n mach33 -l app=admin-service -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+        if [ -n "$ADMIN_POD" ]; then
+          POD_STATUS=$(kubectl get pod $ADMIN_POD -n mach33 -o jsonpath='{.status.phase}')
+          if [ "$POD_STATUS" == "Running" ]; then
+            echo "✅ admin-service pod is running"
+          else
+            echo "❌ admin-service pod status: $POD_STATUS"
+            kubectl describe pod $ADMIN_POD -n mach33
+            exit 1
+          fi
+        else
+          echo "❌ admin-service pod not found"
+          kubectl get pods -n mach33
+          exit 1
+        fi
+        
+        echo "Verification completed successfully"
+        echo "The enhanced tree navigation has been deployed to production"
+
     - name: Post-deployment notification
       if: success()
       run: |

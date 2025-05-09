@@ -1,0 +1,187 @@
+/* Tree Navigation CSS */
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.menu-item {
+  border-bottom: 1px solid #f0f0f0;
+  overflow: hidden;
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.menu-header:hover {
+  background-color: #f8f9fa;
+}
+
+.menu-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z' fill='%23333'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.menu-title {
+  flex-grow: 1;
+  font-size: 14px;
+  color: #333;
+}
+
+.menu-arrow {
+  width: 12px;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z' fill='%23333'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.3s;
+}
+
+/* Second level submenu */
+.submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  background-color: #f8f9fa;
+}
+
+.menu-item.active > .submenu {
+  max-height: 1000px; /* Large enough to fit all content */
+}
+
+.submenu-item {
+  border-bottom: 1px solid #eaeaea;
+  overflow: hidden;
+}
+
+.submenu-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px 10px 40px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submenu-header:hover {
+  background-color: #f0f0f0;
+}
+
+.submenu-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z' fill='%23666'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.submenu-title {
+  flex-grow: 1;
+  font-size: 13px;
+  color: #555;
+}
+
+.submenu-arrow {
+  width: 10px;
+  height: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z' fill='%23666'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.3s;
+}
+
+.menu-item.active > .menu-header > .menu-arrow,
+.submenu-item.active > .submenu-header > .submenu-arrow {
+  transform: rotate(180deg);
+}
+
+/* Third level menu */
+.third-level-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  background-color: #eff0f2;
+}
+
+.submenu-item.active > .third-level-menu {
+  max-height: 800px; /* Large enough to fit content */
+}
+
+.third-level-item {
+  padding: 8px 15px 8px 65px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 1px solid #e5e5e5;
+  transition: background-color 0.3s;
+}
+
+.third-level-item:hover {
+  background-color: #e8e9eb;
+}
+
+/* Active item styling */
+.menu-item.active > .menu-header,
+.submenu-item.active > .submenu-header {
+  font-weight: 500;
+  color: #2b6cb0;
+}
+
+/* For Mach33 theme */
+:root {
+  --mach33-primary: #3a3a7e;
+  --mach33-secondary: #6a6aa0;
+  --mach33-accent: #f5b041;
+  --mach33-background: #f8f9fa;
+  --mach33-text: #333;
+}
+
+.menu-item.active > .menu-header {
+  border-left: 3px solid var(--mach33-accent);
+  background-color: rgba(58, 58, 126, 0.05);
+}
+
+.submenu-item.active > .submenu-header {
+  background-color: rgba(58, 58, 126, 0.03);
+}
+
+.third-level-item.active {
+  background-color: rgba(58, 58, 126, 0.02);
+  font-weight: 500;
+  color: var(--mach33-primary);
+}
+
+/* Production marker */
+.production-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #e74c3c;
+  color: white;
+  padding: 3px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+} 
